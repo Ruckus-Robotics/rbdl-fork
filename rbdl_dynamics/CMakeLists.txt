@@ -1,6 +1,17 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 PROJECT (rbdl)
 
+SET ( RBDL_VERSION_MAJOR 2 )
+SET ( RBDL_VERSION_MINOR 5 )
+SET ( RBDL_VERSION_PATCH 0 )
+SET ( RBDL_VERSION 
+	${RBDL_VERSION_MAJOR}.${RBDL_VERSION_MINOR}.${RBDL_VERSION_PATCH}
+)
+SET ( RBDL_SO_VERSION 
+	${RBDL_VERSION_MAJOR}.${RBDL_VERSION_MINOR}.${RBDL_VERSION_PATCH}
+)
+SET (PROJECT_VERSION ${RBDL_VERSION})
+
 # check c++11 / c++0x
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
@@ -38,82 +49,18 @@ catkin_package(
  DEPENDS Eigen3
 )
 
-# INCLUDE(GNUInstallDirs)
+# Options
+OPTION (RBDL_BUILD_STATIC "Build statically linked library (otherwise dynamiclly linked)" OFF)
+OPTION (RBDL_BUILD_TESTS "Build the test executables" OFF)
+OPTION (RBDL_ENABLE_LOGGING "Enable logging (warning: major impact on performance!)" OFF)
+OPTION (RBDL_USE_SIMPLE_MATH "Use slow math instead of the fast Eigen3 library (faster compilation)" OFF)
+OPTION (RBDL_STORE_VERSION "Enable storing of version information in the library (requires build from valid repository)" OFF)
+OPTION (RBDL_BUILD_ADDON_URDFREADER "Build the (experimental) urdf reader" OFF)
+OPTION (RBDL_BUILD_ADDON_BENCHMARK "Build the benchmarking tool" OFF)
+OPTION (RBDL_BUILD_ADDON_LUAMODEL "Build the lua model reader" OFF)
+OPTION (RBDL_BUILD_PYTHON_WRAPPER "Build experimental python wrapper" OFF)
 
-# # Static / dynamic builds
-# IF (RBDL_BUILD_STATIC)
-#   ADD_LIBRARY ( rbdl-static STATIC ${RBDL_SOURCES} )
-#   SET_TARGET_PROPERTIES ( rbdl-static PROPERTIES PREFIX "lib")
-#   SET_TARGET_PROPERTIES ( rbdl-static PROPERTIES OUTPUT_NAME "rbdl")
-
-# 	IF (RBDL_BUILD_ADDON_LUAMODEL)
-# 		TARGET_LINK_LIBRARIES ( rbdl-static
-# 			rbdl_luamodel-static
-# 			)
-# 	ENDIF (RBDL_BUILD_ADDON_LUAMODEL)
-
-# 	INSTALL (TARGETS rbdl-static
-# 	  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-# 		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-# 	)
-# ELSE (RBDL_BUILD_STATIC)
-# 	ADD_LIBRARY ( rbdl SHARED ${RBDL_SOURCES} )
-# 	SET_TARGET_PROPERTIES ( rbdl PROPERTIES
-# 		VERSION ${RBDL_VERSION}
-# 		SOVERSION ${RBDL_SO_VERSION}
-# 		)
-
-# 	INSTALL (TARGETS rbdl
-# 		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-# 		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-# 		)
-# ENDIF (RBDL_BUILD_STATIC)
-
-# IF (RBDL_STORE_VERSION)
-# 	# Set versioning information that can be queried during runtime
-# 	EXEC_PROGRAM("hg" ${CMAKE_CURRENT_SOURCE_DIR} ARGS "id -i"
-# 		OUTPUT_VARIABLE RBDL_BUILD_REVISION)
-# 	EXEC_PROGRAM("hg" ${CMAKE_CURRENT_SOURCE_DIR} ARGS "branch"
-# 		OUTPUT_VARIABLE RBDL_BUILD_BRANCH)
-# 	SET (RBDL_BUILD_TYPE ${CMAKE_BUILD_TYPE})
-# ELSE (RBDL_STORE_VERSION)
-# 	SET (RBDL_BUILD_REVISION "unknown")
-# 	SET (RBDL_BUILD_BRANCH "unknown")
-# 	SET (RBDL_BUILD_TYPE "unknown")
-# ENDIF (RBDL_STORE_VERSION)
-
-# CONFIGURE_FILE (
-# 	"${CMAKE_CURRENT_SOURCE_DIR}/include/rbdl/rbdl_config.h.cmake" 
-# 	"${CMAKE_CURRENT_BINARY_DIR}/include/rbdl/rbdl_config.h"
-# 	)
-
-# # Python wrapper
-# IF (RBDL_BUILD_PYTHON_WRAPPER)
-# 	add_subdirectory ( python )
-
-# ENDIF (RBDL_BUILD_PYTHON_WRAPPER)
-
-# # Installation
-# FILE ( GLOB headers 
-# 	${CMAKE_CURRENT_SOURCE_DIR}/include/rbdl/*.h
-# 	${CMAKE_CURRENT_BINARY_DIR}/include/rbdl/rbdl_config.h
-# 	)
-
-# INSTALL ( FILES ${headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rbdl )
-
-# # Setup of SimpleMath install settings
-# IF (RBDL_USE_SIMPLE_MATH)
-# 	INSTALL ( DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/rbdl/SimpleMath"
-# 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rbdl
-# 	)
-# ENDIF (RBDL_USE_SIMPLE_MATH)
-
-# # pkg-config
-# CONFIGURE_FILE (
-#   ${CMAKE_CURRENT_SOURCE_DIR}/rbdl.pc.cmake
-#   ${CMAKE_CURRENT_BINARY_DIR}/rbdl.pc @ONLY
-#   )
-# INSTALL (
-#   FILES  ${CMAKE_CURRENT_BINARY_DIR}/rbdl.pc
-#   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-#   )
+CONFIGURE_FILE (
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/rbdl/rbdl_config.h.cmake" 
+	"${CMAKE_CURRENT_BINARY_DIR}/include/rbdl/rbdl_config.h"
+	)
