@@ -8,7 +8,7 @@
 #ifndef RBDL_MODEL_H
 #define RBDL_MODEL_H
 
-#include "rbdl/rbdl_math.h"
+#include "rbdl_dynamics/rbdl_math.h"
 #include <map>
 #include <list>
 #include <assert.h>
@@ -16,9 +16,9 @@
 #include <limits>
 #include <cstring>
 
-#include "rbdl/Logging.h"
-#include "rbdl/Joint.h"
-#include "rbdl/Body.h"
+#include "rbdl_dynamics/Logging.h"
+#include "rbdl_dynamics/Joint.h"
+#include "rbdl_dynamics/Body.h"
 
 // std::vectors containing any objects that have Eigen matrices or vectors
 // as members need to have a special allocater. This can be achieved with

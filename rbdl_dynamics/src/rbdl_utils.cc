@@ -5,11 +5,11 @@
  * Licensed under the zlib license. See LICENSE for more details.
  */
 
-#include "rbdl/rbdl_utils.h"
+#include "rbdl_dynamics/rbdl_utils.h"
 
-#include "rbdl/rbdl_math.h"
-#include "rbdl/Model.h"
-#include "rbdl/Kinematics.h"
+#include "rbdl_dynamics/rbdl_math.h"
+#include "rbdl_dynamics/Model.h"
+#include "rbdl_dynamics/Kinematics.h"
 
 #include <sstream>
 #include <iomanip>

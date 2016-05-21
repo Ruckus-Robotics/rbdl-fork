@@ -11,10 +11,10 @@
 #include <assert.h>
 #include <iostream>
 
-#include "rbdl/rbdl_math.h"
-#include "rbdl/rbdl_mathutils.h"
+#include "rbdl_dynamics/rbdl_math.h"
+#include "rbdl_dynamics/rbdl_mathutils.h"
 
-#include "rbdl/Logging.h"
+#include "rbdl_dynamics/Logging.h"
 
 namespace RigidBodyDynamics {
 

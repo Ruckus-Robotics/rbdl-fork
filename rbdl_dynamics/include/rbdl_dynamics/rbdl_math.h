@@ -8,15 +8,15 @@
 #ifndef RBDL_MATH_H
 #define RBDL_MATH_H
 
-#include "rbdl/rbdl_config.h"
+#include "rbdl_dynamics/rbdl_config.h"
 
 #ifdef RBDL_USE_SIMPLE_MATH
-#include "rbdl/SimpleMath/SimpleMathFixed.h"
-#include "rbdl/SimpleMath/SimpleMathDynamic.h"
-#include "rbdl/SimpleMath/SimpleMathMixed.h"
-#include "rbdl/SimpleMath/SimpleMathQR.h"
-#include "rbdl/SimpleMath/SimpleMathCholesky.h"
-#include "rbdl/SimpleMath/SimpleMathCommaInitializer.h"
+#include "rbdl_dynamics/SimpleMath/SimpleMathFixed.h"
+#include "rbdl_dynamics/SimpleMath/SimpleMathDynamic.h"
+#include "rbdl_dynamics/SimpleMath/SimpleMathMixed.h"
+#include "rbdl_dynamics/SimpleMath/SimpleMathQR.h"
+#include "rbdl_dynamics/SimpleMath/SimpleMathCholesky.h"
+#include "rbdl_dynamics/SimpleMath/SimpleMathCommaInitializer.h"
 #include <vector>
 
 typedef SimpleMath::Fixed::Matrix<double, 3,1> Vector3_t;
@@ -36,7 +36,7 @@ typedef SimpleMath::Dynamic::Matrix<double> VectorN_t;
 #include <Eigen/StdVector>
 #include <Eigen/QR>
 
-#include "rbdl/rbdl_eigenmath.h"
+#include "rbdl_dynamics/rbdl_eigenmath.h"
 
 typedef Eigen::Matrix<double, 6, 3> Matrix63_t;
 

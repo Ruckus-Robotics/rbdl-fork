@@ -9,8 +9,8 @@
 #define RBDL_UTILS_H
 
 #include <string>
-#include <rbdl/rbdl_config.h>
-#include <rbdl/rbdl_math.h>
+#include <rbdl_dynamics/rbdl_config.h>
+#include <rbdl_dynamics/rbdl_math.h>
 
 namespace RigidBodyDynamics {
 

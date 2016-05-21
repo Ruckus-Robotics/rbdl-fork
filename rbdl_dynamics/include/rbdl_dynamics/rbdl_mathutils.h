@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <cmath>
 
-#include "rbdl/rbdl_math.h"
+#include "rbdl_dynamics/rbdl_math.h"
 
 namespace RigidBodyDynamics {
 struct Model;

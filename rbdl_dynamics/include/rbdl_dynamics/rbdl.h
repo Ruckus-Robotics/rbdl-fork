@@ -8,19 +8,19 @@
 #ifndef RBDL_H
 #define RBDL_H
 
-#include "rbdl/rbdl_math.h"
-#include "rbdl/rbdl_mathutils.h"
+#include "rbdl_dynamics/rbdl_math.h"
+#include "rbdl_dynamics/rbdl_mathutils.h"
 
-#include "rbdl/Logging.h"
+#include "rbdl_dynamics/Logging.h"
 
-#include "rbdl/Body.h"
-#include "rbdl/Model.h"
-#include "rbdl/Dynamics.h"
-#include "rbdl/Joint.h"
-#include "rbdl/Kinematics.h"
-#include "rbdl/Contacts.h"
+#include "rbdl_dynamics/Body.h"
+#include "rbdl_dynamics/Model.h"
+#include "rbdl_dynamics/Dynamics.h"
+#include "rbdl_dynamics/Joint.h"
+#include "rbdl_dynamics/Kinematics.h"
+#include "rbdl_dynamics/Contacts.h"
 
-#include "rbdl/rbdl_utils.h"
+#include "rbdl_dynamics/rbdl_utils.h"
 
 /** \page api_version_checking_page API Changes
  * @{

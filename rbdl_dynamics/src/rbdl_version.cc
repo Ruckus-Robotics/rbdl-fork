@@ -5,7 +5,7 @@
  * Licensed under the zlib license. See LICENSE for more details.
  */
 
-#include <rbdl/rbdl_config.h>
+#include <rbdl_dynamics/rbdl_config.h>
 
 #include <iostream>
 #include <sstream>

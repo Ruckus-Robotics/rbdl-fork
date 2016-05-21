@@ -9,7 +9,7 @@
 #define RBDL_LOGGING_H
 
 #include <sstream>
-#include <rbdl/rbdl_config.h>
+#include <rbdl_dynamics/rbdl_config.h>
 
 class LoggingGuard;
 

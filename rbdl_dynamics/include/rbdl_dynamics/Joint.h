@@ -8,10 +8,10 @@
 #ifndef RBDL_JOINT_H
 #define RBDL_JOINT_H
 
-#include "rbdl/rbdl_math.h"
+#include "rbdl_dynamics/rbdl_math.h"
 #include <assert.h>
 #include <iostream>
-#include "rbdl/Logging.h"
+#include "rbdl_dynamics/Logging.h"
 
 namespace RigidBodyDynamics {
 
