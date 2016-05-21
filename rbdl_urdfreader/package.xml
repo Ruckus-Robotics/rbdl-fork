@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>rbdl</name>
+  <name>rbdl_urdfreader</name>
   <version>0.0.0</version>
-  <description>The rbdl meta-package</description>
+  <description>The rbdl_urdfreader package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
@@ -12,13 +12,14 @@
   <license>TODO</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <exec_depend>rbdl_dynamics</exec_depend>
-  <!-- <depend>rbdl_benchmark</depend> -->
-  <!-- <depend>rbdl_luamodel</depend> -->
-  <exec_depend>rbdl_urdfreader</exec_depend>
+  <depend>rbdl_dynamics</depend>
+  <depend>roscpp</depend>
+  <depend>urdf</depend>
+  <test_depend>gtest</test_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
-   <export>
-   <metapackage />
- </export>
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
 </package>

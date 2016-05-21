@@ -1,7 +1,7 @@
 #ifndef RBDL_URDFREADER_H
 #define RBDL_URDFREADER_H
 
-#include <rbdl/rbdl_config.h>
+#include <rbdl_dynamics/rbdl_config.h>
 
 namespace RigidBodyDynamics {
 

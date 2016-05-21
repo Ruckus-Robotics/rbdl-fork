@@ -1,6 +1,6 @@
-#include <rbdl/rbdl.h>
+#include <rbdl_dynamics/rbdl.h>
 
-#include "urdfreader.h"
+#include "rbdl_urdfreader/urdfreader.h"
 
 #include <assert.h>
 #include <iostream>
@@ -8,7 +8,7 @@
 #include <map>
 #include <stack>
 
-#ifdef RBDL_USE_ROS_URDF_LIBRARY
+// #ifdef RBDL_USE_ROS_URDF_LIBRARY
 #include <urdf_model/model.h>
 #include <urdf_parser/urdf_parser.h>
 #include "ros/ros.h"
@@ -17,17 +17,6 @@ typedef boost::shared_ptr<urdf::Link> LinkPtr;
 typedef const boost::shared_ptr<const urdf::Link> ConstLinkPtr;
 typedef boost::shared_ptr<urdf::Joint> JointPtr;
 typedef boost::shared_ptr<urdf::ModelInterface> ModelPtr;
-
-#else
-#include <urdf/urdfdom_headers/urdf_model/include/urdf_model/model.h>
-#include <urdf/urdfdom/urdf_parser/include/urdf_parser/urdf_parser.h>
-
-typedef my_shared_ptr<urdf::Link> LinkPtr;
-typedef const my_shared_ptr<const urdf::Link> ConstLinkPtr;
-typedef my_shared_ptr<urdf::Joint> JointPtr;
-typedef my_shared_ptr<urdf::ModelInterface> ModelPtr;
-
-#endif
 
 using namespace std;
 
