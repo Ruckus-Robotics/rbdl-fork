@@ -99,7 +99,9 @@ if (CATKIN_ENABLE_TESTING)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 	catkin_add_gtest(BodyTests tests/BodyTests.cc)
+	catkin_add_gtest(CalcAccelerationsTests tests/CalcAccelerationsTests.cc)
 	#
 	target_link_libraries(BodyTests ${PROJECT_NAME})
+	target_link_libraries(CalcAccelerationsTests ${PROJECT_NAME})
 
 endif()
