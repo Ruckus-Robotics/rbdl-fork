@@ -32,7 +32,7 @@
 #include <string>
 #include <vector>
 
-#include <rbdl/rbdl_config.h>
+#include <rbdl_dynamics/rbdl_config.h>
 
 // Forward declaration for Lua
 extern "C" {

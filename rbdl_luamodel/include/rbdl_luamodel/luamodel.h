@@ -1,7 +1,7 @@
 #ifndef _RBDL_LUAMODEL_H
 #define _RBDL_LUAMODEL_H
 
-#include <rbdl/rbdl_config.h>
+#include <rbdl_dynamics/rbdl_config.h>
 
 extern "C" {
   struct lua_State;

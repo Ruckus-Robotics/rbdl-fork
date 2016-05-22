@@ -1,10 +1,10 @@
-#include "rbdl/rbdl.h"
-#include "luamodel.h"
+#include "rbdl_dynamics/rbdl.h"
+#include "rbdl_luamodel/luamodel.h"
 
 #include <iostream>
 #include <map>
 
-#include "luatables.h"
+#include "rbdl_luamodel/luatables.h"
 
 extern "C"
 {

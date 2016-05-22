@@ -1,6 +1,6 @@
-#include "rbdl/rbdl.h"
-#include "rbdl/rbdl_utils.h"
-#include "luamodel.h"
+#include "rbdl_dynamics/rbdl.h"
+#include "rbdl_dynamics/rbdl_utils.h"
+#include "rbdl_luamodel/luamodel.h"
 
 #include <iostream>
 #include <iomanip>

@@ -1,72 +1,54 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
+PROJECT (rbdl_luamodel)
 
-LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake )
+find_package(catkin REQUIRED COMPONENTS rbdl_dynamics)
+find_package(Lua51 REQUIRED)
 
-SET_TARGET_PROPERTIES ( ${PROJECT_EXECUTABLES} PROPERTIES
-  LINKER_LANGUAGE CXX
-  )
+# check c++11 / c++0x
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "-std=c++0x")
+else()
+    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
 
-FIND_PACKAGE (Lua51 REQUIRED)
+set(INCLUDES_DIR include)
 
-INCLUDE_DIRECTORIES ( 
-  ${CMAKE_CURRENT_BINARY_DIR}/include/rbdl
+catkin_package(
+ INCLUDE_DIRS ${INCLUDES_DIR} ${LUA_INCLUDE_DIR}
+ LIBRARIES ${PROJECT_NAME}
+CATKIN_DEPENDS rbdl_dynamics
+ DEPENDS Lua51
+)
+
+include_directories( 
+  ${INCLUDES_DIR}
   ${LUA_INCLUDE_DIR}
+  ${catkin_INCLUDE_DIRS}
   )
 
-SET ( LUAMODEL_SOURCES 
-  luamodel.cc
-  luatables.cc
+set ( LUAMODEL_SOURCES 
+  src/luamodel.cc
+  src/luatables.cc
   )
 
-ADD_EXECUTABLE (rbdl_luamodel_util rbdl_luamodel_util.cc)
+ADD_EXECUTABLE (rbdl_luamodel_util src/rbdl_luamodel_util.cc)
 
-IF (RBDL_BUILD_STATIC)
-  ADD_LIBRARY ( rbdl_luamodel-static STATIC ${LUAMODEL_SOURCES} )
-  SET_TARGET_PROPERTIES ( rbdl_luamodel-static PROPERTIES PREFIX "lib")
-  SET_TARGET_PROPERTIES ( rbdl_luamodel-static PROPERTIES OUTPUT_NAME "rbdl_luamodel")
+ADD_LIBRARY (${PROJECT_NAME} ${LUAMODEL_SOURCES} )
 
-  TARGET_LINK_LIBRARIES (rbdl_luamodel-static
-    rbdl-static
+  TARGET_LINK_LIBRARIES (${PROJECT_NAME}
+    ${catkin_LIBRARIES}
     ${LUA_LIBRARIES}
     )
 
   TARGET_LINK_LIBRARIES (rbdl_luamodel_util
-    rbdl_luamodel-static
-    rbdl-static
+    ${PROJECT_NAME}
+    ${catkin_LIBRARIES}
     )
 
-  INSTALL (TARGETS rbdl_luamodel-static rbdl_luamodel_util 
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  INSTALL (TARGETS ${PROJECT_NAME} rbdl_luamodel_util 
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
     )
-ELSE (RBDL_BUILD_STATIC)
-  ADD_LIBRARY ( rbdl_luamodel SHARED ${LUAMODEL_SOURCES} )
-  SET_TARGET_PROPERTIES ( rbdl_luamodel PROPERTIES
-    VERSION ${RBDL_VERSION}
-    SOVERSION ${RBDL_SO_VERSION}
-    )
-
-  TARGET_LINK_LIBRARIES (rbdl_luamodel
-    rbdl
-    ${LUA_LIBRARIES}
-    )
-
-  TARGET_LINK_LIBRARIES (rbdl_luamodel_util
-    rbdl_luamodel
-    rbdl
-    )
-
-  INSTALL (TARGETS rbdl_luamodel rbdl_luamodel_util 
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-ENDIF (RBDL_BUILD_STATIC)
-
-FILE ( GLOB headers 
-  "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
-  )
-
-INSTALL ( FILES ${headers} 
-  DESTINATION 
-  ${CMAKE_INSTALL_INCLUDEDIR}/rbdl/addons/luamodel 
-  )

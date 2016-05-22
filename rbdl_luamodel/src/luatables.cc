@@ -23,7 +23,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "luatables.h"
+#include "rbdl_luamodel/luatables.h"
 
 #include <assert.h>
 #include <iostream>
