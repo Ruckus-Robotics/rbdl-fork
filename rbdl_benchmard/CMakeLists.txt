@@ -1,58 +1,41 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
+PROJECT (rbdl_benchmark)
 
-LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake )
+find_package(catkin REQUIRED COMPONENTS rbdl_dynamics rbdl_luamodel rbdl_urdfreader)
 
-INCLUDE_DIRECTORIES ( 
-  ${CMAKE_CURRENT_BINARY_DIR}/include/rbdl
-  )
+# check c++11 / c++0x
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "-std=c++0x")
+else()
+    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
 
-SET_TARGET_PROPERTIES ( ${PROJECT_EXECUTABLES} PROPERTIES
-  LINKER_LANGUAGE CXX
-  )
-
-# Perform the proper linking
-SET (CMAKE_SKIP_BUILD_RPATH FALSE)
-SET (CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-SET (CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-SET (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+set(INCLUDES_DIR include)
 
 # Options
-SET ( BENCHMARK_SOURCES 
-  model_generator.cc
-  Human36Model.cc
-  benchmark.cc
+set( BENCHMARK_SOURCES 
+  src/model_generator.cc
+  src/Human36Model.cc
+  src/benchmark.cc
   )
 
-ADD_EXECUTABLE ( benchmark ${BENCHMARK_SOURCES} )
+catkin_package(
+ INCLUDE_DIRS ${INCLUDES_DIR} 
+ # LIBRARIES ${PROJECT_NAME}
+CATKIN_DEPENDS rbdl_dynamics rbdl_luamodel rbdl_urdfreader
+ # DEPENDS 
+)
 
-IF (RBDL_BUILD_STATIC)
-  SET (LIBRARIES rbdl-static)
+include_directories(${INCLUDES_DIR} ${catkin_INCLUDE_DIRS})
 
-  IF (RBDL_BUILD_ADDON_LUAMODEL) 
-    SET (LIBRARIES ${LIBRARIES} rbdl_luamodel-static)
-  ENDIF (RBDL_BUILD_ADDON_LUAMODEL) 
+add_executable( ${PROJECT_NAME} ${BENCHMARK_SOURCES} )
 
-  IF (RBDL_BUILD_ADDON_URDFREADER) 
-    SET (LIBRARIES ${LIBRARIES} rbdl_urdfreader-static)
-  ENDIF (RBDL_BUILD_ADDON_URDFREADER) 
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
-  TARGET_LINK_LIBRARIES ( benchmark
-    rbdl-static
-    ${LIBRARIES}
+install(TARGETS ${PROJECT_NAME} 
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
     )
-ELSE (RBDL_BUILD_STATIC)
-  SET (LIBRARIES rbdl)
-
-  IF (RBDL_BUILD_ADDON_LUAMODEL) 
-    SET (LIBRARIES ${LIBRARIES} rbdl_luamodel)
-  ENDIF (RBDL_BUILD_ADDON_LUAMODEL) 
-
-  IF (RBDL_BUILD_ADDON_URDFREADER) 
-    SET (LIBRARIES ${LIBRARIES} rbdl_urdfreader)
-  ENDIF (RBDL_BUILD_ADDON_URDFREADER) 
-
-  TARGET_LINK_LIBRARIES ( benchmark
-    rbdl
-    ${LIBRARIES}
-    )
-ENDIF (RBDL_BUILD_STATIC)

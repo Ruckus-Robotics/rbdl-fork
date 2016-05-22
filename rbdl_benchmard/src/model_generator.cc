@@ -1,4 +1,4 @@
-#include "model_generator.h"
+#include "rbdl_benchmark/model_generator.h"
 
 #include "rbdl_dynamics/rbdl.h"
 

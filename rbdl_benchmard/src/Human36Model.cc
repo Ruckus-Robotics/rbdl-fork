@@ -1,6 +1,6 @@
-#include "Human36Model.h"
+#include "rbdl_benchmark/Human36Model.h"
 
-#include "rbdl/rbdl.h"
+#include "rbdl_dynamics/rbdl.h"
 
 using namespace RigidBodyDynamics;
 using namespace RigidBodyDynamics::Math;

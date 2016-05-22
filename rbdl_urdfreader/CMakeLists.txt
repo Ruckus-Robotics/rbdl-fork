@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp urdf rbdl_dynamics)
 include_directories( include ${catkin_INCLUDE_DIRS})
 
 catkin_package(
- INCLUDE_DIRS ${INCLUDES_DIR} ${EIGEN3_INCLUDE_DIR}
+ INCLUDE_DIRS include ${EIGEN3_INCLUDE_DIR}
  LIBRARIES ${PROJECT_NAME}
 CATKIN_DEPENDS roscpp urdf rbdl_dynamics
  # DEPENDS 

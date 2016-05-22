@@ -7,26 +7,19 @@
 #include <iomanip>
 #include <sstream>
 
-#include "rbdl/rbdl.h"
-#include "model_generator.h"
-#include "Human36Model.h"
-#include "SampleData.h"
-#include "Timer.h"
+#include "rbdl_dynamics/rbdl.h"
+#include "rbdl_benchmark/model_generator.h"
+#include "rbdl_benchmark/Human36Model.h"
+#include "rbdl_benchmark/SampleData.h"
+#include "rbdl_benchmark/Timer.h"
 
-#ifdef RBDL_BUILD_ADDON_LUAMODEL
-#include "../addons/luamodel/luamodel.h"
+#include "rbdl_luamodel/luamodel.h"
+#include "rbdl_urdfreader/urdfreader.h"
+
 bool have_luamodel = true;
-#else
-bool have_luamodel = false;
-#endif
 
-#ifdef RBDL_BUILD_ADDON_URDFREADER
-#include "../addons/urdfreader/urdfreader.h"
 bool have_urdfreader = true;
 bool urdf_floating_base = false;
-#else
-bool have_urdfreader = false;
-#endif
 
 using namespace std;
 using namespace RigidBodyDynamics;
