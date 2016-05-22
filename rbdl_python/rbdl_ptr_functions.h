@@ -11,8 +11,8 @@
  * (or -std=c++0x on older compilers).
  */
 
-#include <rbdl/rbdl_math.h>
-#include <rbdl/Dynamics.h> 
+#include <rbdl_dynamics/rbdl_math.h>
+#include <rbdl_dynamics/Dynamics.h> 
 
 namespace RigidBodyDynamics {
 

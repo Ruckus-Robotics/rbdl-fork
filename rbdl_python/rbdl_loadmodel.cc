@@ -1,11 +1,11 @@
-#include <rbdl/rbdl.h>
+#include <rbdl_dynamics/rbdl.h>
 
 #ifdef RBDL_BUILD_ADDON_LUAMODEL
-#include <addons/luamodel/luamodel.h>
+#include <rbdl_luamodel/luamodel.h>
 #endif
 
 #ifdef RBDL_BUILD_ADDON_URDFREADER
-#include <addons/urdfreader/urdfreader.h>
+#include <rbdl_urdfreader/urdfreader.h>
 #endif
 
 #include <string>
