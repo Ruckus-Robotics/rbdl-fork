@@ -1,20 +1,41 @@
-#include <UnitTest++.h>
+
+#include <gtest/gtest.h>
 
 #include <iostream>
 
-#include "rbdl/rbdl_mathutils.h"
-#include "rbdl/Body.h"
+#include "rbdl_dynamics/rbdl_mathutils.h"
+#include "rbdl_dynamics/Body.h"
+
+
+#include "UnitTestUtils.hpp"
 
 using namespace std;
 using namespace RigidBodyDynamics;
 using namespace RigidBodyDynamics::Math;
 
-const double TEST_PREC = 1.0e-14;
+class BodyTests : public testing::Test
+{
+public:
+    BodyTests(){};
+
+    void SetUp()
+    {
+
+    }
+
+    void TearDown()
+    {
+
+    }
+
+    const double TEST_PREC = 1.0e-14;
+};
 
 /* Tests whether the spatial inertia matches the one specified by its
  * parameters
  */
-TEST ( TestComputeSpatialInertiaFromAbsoluteRadiiGyration ) {
+TEST_F(BodyTests, TestComputeSpatialInertiaFromAbsoluteRadiiGyration )
+{
   Body body(1.1, Vector3d (1.5, 1.2, 1.3), Vector3d (1.4, 2., 3.));
 
   Matrix3d inertia_C (
@@ -35,11 +56,12 @@ TEST ( TestComputeSpatialInertiaFromAbsoluteRadiiGyration ) {
 
   SpatialRigidBodyInertia body_rbi = SpatialRigidBodyInertia::createFromMassComInertiaC (body.mMass, body.mCenterOfMass, body.mInertia);
 
-  CHECK_ARRAY_CLOSE (reference_inertia.data(), body_rbi.toMatrix().data(), 36, TEST_PREC);
-  CHECK_ARRAY_CLOSE (inertia_C.data(), body.mInertia.data(), 9, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (reference_inertia.data(), body_rbi.toMatrix().data(), 36, TEST_PREC));
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (inertia_C.data(), body.mInertia.data(), 9, TEST_PREC));
 }
 
-TEST ( TestBodyConstructorMassComInertia ) {
+TEST_F(BodyTests, TestBodyConstructorMassComInertia )
+{
   double mass = 1.1;
   Vector3d com (1.5, 1.2, 1.3);
   Matrix3d inertia_C (
@@ -60,11 +82,11 @@ TEST ( TestBodyConstructorMassComInertia ) {
       );
 
   SpatialRigidBodyInertia body_rbi = SpatialRigidBodyInertia::createFromMassComInertiaC (body.mMass, body.mCenterOfMass, body.mInertia);
-  CHECK_ARRAY_CLOSE (reference_inertia.data(), body_rbi.toMatrix().data(), 36, TEST_PREC);
-  CHECK_ARRAY_CLOSE (inertia_C.data(), body.mInertia.data(), 9, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(reference_inertia.data(), body_rbi.toMatrix().data(), 36, TEST_PREC));
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(inertia_C.data(), body.mInertia.data(), 9, TEST_PREC));
 }
 
-TEST ( TestBodyJoinNullbody ) {
+TEST_F(BodyTests, TestBodyJoinNullbody ) {
   ClearLogOutput();
   Body body(1.1, Vector3d (1.5, 1.2, 1.3), Vector3d (1.4, 2., 3.));
   Body nullbody (0., Vector3d (0., 0., 0.), Vector3d (0., 0., 0.));
@@ -75,12 +97,12 @@ TEST ( TestBodyJoinNullbody ) {
   SpatialRigidBodyInertia body_rbi (body.mMass, body.mCenterOfMass, body.mInertia);
   SpatialRigidBodyInertia joined_body_rbi (joined_body.mMass, joined_body.mCenterOfMass, joined_body.mInertia);
 
-  CHECK_EQUAL (1.1, body.mMass);
-  CHECK_ARRAY_CLOSE (body.mCenterOfMass.data(), joined_body.mCenterOfMass.data(), 3, TEST_PREC);
-  CHECK_ARRAY_CLOSE (body_rbi.toMatrix().data(), joined_body_rbi.toMatrix().data(), 36, TEST_PREC);
+  ASSERT_EQ(1.1, body.mMass);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(body.mCenterOfMass.data(), joined_body.mCenterOfMass.data(), 3, TEST_PREC));
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(body_rbi.toMatrix().data(), joined_body_rbi.toMatrix().data(), 36, TEST_PREC));
 }
 
-TEST ( TestBodyJoinTwoBodies ) {
+TEST_F(BodyTests, TestBodyJoinTwoBodies ) {
   ClearLogOutput();
   Body body_a(1.1, Vector3d (-1.1, 1.3, 0.), Vector3d (3.1, 3.2, 3.3));
   Body body_b(1.1, Vector3d (1.1, 1.3, 0.), Vector3d (3.1, 3.2, 3.3));
@@ -99,12 +121,12 @@ TEST ( TestBodyJoinTwoBodies ) {
       2.86, -0, 0, 0, 0, 2.2
       );
 
-  CHECK_EQUAL (2.2, body_joined.mMass);
-  CHECK_ARRAY_EQUAL (Vector3d (0., 1.3, 0.).data(), body_joined.mCenterOfMass.data(), 3);
-  CHECK_ARRAY_CLOSE (reference_inertia.data(), body_joined_rbi.toMatrix().data(), 36, TEST_PREC);
+  ASSERT_EQ(2.2, body_joined.mMass);
+  EXPECT_TRUE(unit_test_utils::checkArraysEq(Vector3d (0., 1.3, 0.).data(), body_joined.mCenterOfMass.data(), 3));
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(reference_inertia.data(), body_joined_rbi.toMatrix().data(), 36, TEST_PREC));
 }
 
-TEST ( TestBodyJoinTwoBodiesDisplaced ) {
+TEST_F(BodyTests, TestBodyJoinTwoBodiesDisplaced ) {
   ClearLogOutput();
   Body body_a(1.1, Vector3d (-1.1, 1.3, 0.), Vector3d (3.1, 3.2, 3.3));
   Body body_b(1.1, Vector3d (0., 0., 0.), Vector3d (3.1, 3.2, 3.3));
@@ -123,14 +145,14 @@ TEST ( TestBodyJoinTwoBodiesDisplaced ) {
       2.86, -0, 0, 0, 0, 2.2
       );
 
-  CHECK_EQUAL (2.2, body_joined.mMass);
-  CHECK_ARRAY_EQUAL (Vector3d (0., 1.3, 0.).data(), body_joined.mCenterOfMass.data(), 3);
-  CHECK_ARRAY_CLOSE (reference_inertia.data(), body_joined_rbi.toMatrix().data(), 36, TEST_PREC);
+  ASSERT_EQ(2.2, body_joined.mMass);
+  EXPECT_TRUE(unit_test_utils::checkArraysEq(Vector3d (0., 1.3, 0.).data(), body_joined.mCenterOfMass.data(), 3));
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (reference_inertia.data(), body_joined_rbi.toMatrix().data(), 36, TEST_PREC));
 
 
 }
 
-TEST ( TestBodyJoinTwoBodiesRotated ) {
+TEST_F(BodyTests, TestBodyJoinTwoBodiesRotated ) {
   ClearLogOutput();
   Body body_a(1.1, Vector3d (0., 0., 0.), Vector3d (3.1, 3.2, 3.3));
   Body body_b(1.1, Vector3d (0., 0., 0.), Vector3d (3.1, 3.3, 3.2));
@@ -149,12 +171,12 @@ TEST ( TestBodyJoinTwoBodiesRotated ) {
       0., 0., 0., 0., 0., 2.2
       );
 
-  CHECK_EQUAL (2.2, body_joined.mMass);
-  CHECK_ARRAY_EQUAL (Vector3d (0., 0., 0.).data(), body_joined.mCenterOfMass.data(), 3);
-  CHECK_ARRAY_CLOSE (reference_inertia.data(), body_joined_rbi.toMatrix().data(), 36, TEST_PREC);
+  ASSERT_EQ(2.2, body_joined.mMass);
+  EXPECT_TRUE(unit_test_utils::checkArraysEq(Vector3d (0., 0., 0.).data(), body_joined.mCenterOfMass.data(), 3));
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(reference_inertia.data(), body_joined_rbi.toMatrix().data(), 36, TEST_PREC));
 }
 
-TEST ( TestBodyJoinTwoBodiesRotatedAndTranslated ) {
+TEST_F(BodyTests, TestBodyJoinTwoBodiesRotatedAndTranslated ) {
   ClearLogOutput();
   Body body_a(1.1, Vector3d (0., 0., 0.), Vector3d (3.1, 3.2, 3.3));
   Body body_b(1.1, Vector3d (-1., 1., 0.), Vector3d (3.2, 3.1, 3.3));
@@ -173,12 +195,12 @@ TEST ( TestBodyJoinTwoBodiesRotatedAndTranslated ) {
       0., 0., 0., 0., 0., 2.2
       );
 
-  CHECK_EQUAL (2.2, body_joined.mMass);
-  CHECK_ARRAY_CLOSE (Vector3d (0., 0., 0.).data(), body_joined.mCenterOfMass.data(), 3, TEST_PREC);
-  CHECK_ARRAY_CLOSE (reference_inertia.data(), body_joined_rbi.toMatrix().data(), 36, TEST_PREC);
+  ASSERT_EQ (2.2, body_joined.mMass);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (Vector3d (0., 0., 0.).data(), body_joined.mCenterOfMass.data(), 3, TEST_PREC));
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (reference_inertia.data(), body_joined_rbi.toMatrix().data(), 36, TEST_PREC));
 }
 
-TEST ( TestBodyConstructorSpatialRigidBodyInertiaMultiplyMotion ) {
+TEST_F(BodyTests, TestBodyConstructorSpatialRigidBodyInertiaMultiplyMotion ) {
   Body body(1.1, Vector3d (1.5, 1.2, 1.3), Vector3d (1.4, 2., 3.));
 
   SpatialRigidBodyInertia rbi = SpatialRigidBodyInertia(
@@ -191,15 +213,15 @@ TEST ( TestBodyConstructorSpatialRigidBodyInertiaMultiplyMotion ) {
   SpatialVector fv_matrix = rbi.toMatrix() * mv;
   SpatialVector fv_rbi = rbi * mv;
 
-  CHECK_ARRAY_CLOSE (
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (
       fv_matrix.data(),
       fv_rbi.data(),
       6,
       TEST_PREC
-      );
+      ));
 }
 
-TEST ( TestBodyConstructorSpatialRigidBodyInertia ) {
+TEST_F(BodyTests, TestBodyConstructorSpatialRigidBodyInertia ) {
   Body body(1.1, Vector3d (1.5, 1.2, 1.3), Vector3d (1.4, 2., 3.));
 
   SpatialRigidBodyInertia rbi = SpatialRigidBodyInertia(
@@ -209,15 +231,15 @@ TEST ( TestBodyConstructorSpatialRigidBodyInertia ) {
       );
   SpatialMatrix spatial_inertia = rbi.toMatrix();
 
-  CHECK_ARRAY_CLOSE (
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (
       spatial_inertia.data(),
       rbi.toMatrix().data(),
       36,
       TEST_PREC
-      );
+      ));
 }
 
-TEST ( TestBodyConstructorCopySpatialRigidBodyInertia ) {
+TEST_F(BodyTests, TestBodyConstructorCopySpatialRigidBodyInertia ) {
   Body body(1.1, Vector3d (1.5, 1.2, 1.3), Vector3d (1.4, 2., 3.));
 
   SpatialRigidBodyInertia rbi = SpatialRigidBodyInertia(
@@ -235,10 +257,17 @@ TEST ( TestBodyConstructorCopySpatialRigidBodyInertia ) {
   //	cout << "rbi.h = " << rbi.h.transpose() << endl;
   //	cout << "rbi.I = " << endl << rbi.I << endl;
 
-  CHECK_ARRAY_CLOSE (
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (
       rbi.toMatrix().data(),
       rbi_from_matrix.toMatrix().data(),
       36,
       TEST_PREC
-      );
+      ));
+}
+
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

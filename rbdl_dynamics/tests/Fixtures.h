@@ -1,4 +1,4 @@
-#include "rbdl/rbdl.h"
+#include "rbdl_dynamics/rbdl.h"
 
 struct FixedBase3DoF {
   FixedBase3DoF () {

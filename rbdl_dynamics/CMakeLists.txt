@@ -93,3 +93,13 @@ install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.h*"
 )
+
+# Add gtest based cpp test target and link libraries
+if (CATKIN_ENABLE_TESTING)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+
+	catkin_add_gtest(BodyTests tests/BodyTests.cc)
+	#
+	target_link_libraries(BodyTests ${PROJECT_NAME})
+
+endif()

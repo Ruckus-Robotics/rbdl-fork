@@ -3,13 +3,13 @@
 #include <iostream>
 
 #include "Fixtures.h"
-#include "rbdl/rbdl_mathutils.h"
-#include "rbdl/rbdl_utils.h"
-#include "rbdl/Logging.h"
+#include "rbdl_dynamics/rbdl_mathutils.h"
+#include "rbdl_dynamics/rbdl_utils.h"
+#include "rbdl_dynamics/Logging.h"
 
-#include "rbdl/Model.h"
-#include "rbdl/Kinematics.h"
-#include "rbdl/Dynamics.h"
+#include "rbdl_dynamics/Model.h"
+#include "rbdl_dynamics/Kinematics.h"
+#include "rbdl_dynamics/Dynamics.h"
 
 using namespace std;
 using namespace RigidBodyDynamics;

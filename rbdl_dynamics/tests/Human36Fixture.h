@@ -1,7 +1,7 @@
 #ifndef RBDL_HUMAN36_FIXTURE
 #define RBDL_HUMAN36_FIXTURE
 
-#include "rbdl/rbdl.h"
+#include "rbdl_dynamics/rbdl.h"
 
 struct Human36 {
   RigidBodyDynamics::Model *model;
