@@ -1,16 +1,16 @@
-#include <UnitTest++.h>
+#include <gtest/gtest.h>
 
 #include <iostream>
 
+#include "UnitTestUtils.hpp"
 #include "Fixtures.h"
 #include "Human36Fixture.h"
-#include "rbdl/rbdl_mathutils.h"
-#include "rbdl/Logging.h"
-
-#include "rbdl/Model.h"
-#include "rbdl/Kinematics.h"
-#include "rbdl/Dynamics.h"
-#include "rbdl/Contacts.h"
+#include "rbdl_dynamics/rbdl_mathutils.h"
+#include "rbdl_dynamics/Logging.h"
+#include "rbdl_dynamics/Model.h"
+#include "rbdl_dynamics/Kinematics.h"
+#include "rbdl_dynamics/Dynamics.h"
+#include "rbdl_dynamics/Contacts.h"
 
 using namespace std;
 using namespace RigidBodyDynamics;
@@ -77,8 +77,11 @@ struct CustomEulerZYXJoint : public CustomJoint {
   }
 };
 
-struct CustomJointFixture {
-  CustomJointFixture () {
+struct CustomJointFixture : public testing::Test{
+  CustomJointFixture () {}
+
+    void SetUp()
+    {
     custom_joint = new CustomEulerZYXJoint();
 
     Matrix3d inertia = Matrix3d::Identity(3,3);
@@ -92,7 +95,7 @@ struct CustomJointFixture {
     tau = VectorNd::Zero (reference_model.qdot_size);		
   }
 
-  ~CustomJointFixture () {
+  void TearDown () {
     delete custom_joint;
   }
 
@@ -111,7 +114,7 @@ struct CustomJointFixture {
   VectorNd tau;
 };
 
-TEST_FIXTURE ( CustomJointFixture, UpdateKinematics ) {
+TEST_F ( CustomJointFixture, UpdateKinematics ) {
   for (unsigned int i = 0; i < 3; i++) {
     q[i] = i * 0.1;
     qdot[i] = i * 0.15;
@@ -121,11 +124,17 @@ TEST_FIXTURE ( CustomJointFixture, UpdateKinematics ) {
   UpdateKinematics (reference_model, q, qdot, qddot);
   UpdateKinematics (custom_model, q, qdot, qddot);
 
-  CHECK_ARRAY_EQUAL (reference_model.X_base[reference_body_id].E.data(), custom_model.X_base[custom_body_id].E.data(), 9);
+  EXPECT_TRUE(unit_test_utils::checkArraysEq (reference_model.X_base[reference_body_id].E.data(), custom_model.X_base[custom_body_id].E.data(), 9));
 
-  CHECK_ARRAY_EQUAL (reference_model.v[reference_body_id].data(), custom_model.v[custom_body_id].data(), 6);
+  EXPECT_TRUE(unit_test_utils::checkArraysEq (reference_model.v[reference_body_id].data(), custom_model.v[custom_body_id].data(), 6));
 
-  CHECK_ARRAY_EQUAL (reference_model.a[reference_body_id].data(), custom_model.a[custom_body_id].data(), 6);
+  EXPECT_TRUE(unit_test_utils::checkArraysEq (reference_model.a[reference_body_id].data(), custom_model.a[custom_body_id].data(), 6));
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
 
 // TODO: implement test for UpdateKinematicsCustom
