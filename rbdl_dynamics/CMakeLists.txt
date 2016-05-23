@@ -101,9 +101,11 @@ if (CATKIN_ENABLE_TESTING)
 	catkin_add_gtest(BodyTests tests/BodyTests.cc)
 	catkin_add_gtest(CalcAccelerationsTests tests/CalcAccelerationsTests.cc)
     catkin_add_gtest(CalcVelocitiesTests tests/CalcVelocitiesTests.cc)
+    catkin_add_gtest(CompositeRigidBodyTests tests/CompositeRigidBodyTests.cc)
 	#
 	target_link_libraries(BodyTests ${PROJECT_NAME})
 	target_link_libraries(CalcAccelerationsTests ${PROJECT_NAME})
     target_link_libraries(CalcVelocitiesTests ${PROJECT_NAME})
+    target_link_libraries(CompositeRigidBodyTests ${PROJECT_NAME})
 
 endif()

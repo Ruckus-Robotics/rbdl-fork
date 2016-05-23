@@ -12,6 +12,8 @@ using namespace std;
 using namespace RigidBodyDynamics;
 using namespace RigidBodyDynamics::Math;
 
+const double TEST_PREC = 1.0e-14;
+
 class CalcVelocitiesTest : public testing::Test
 {
 public:
@@ -20,12 +22,16 @@ public:
 
     }
 
-    const double TEST_PREC = 1.0e-14;
+
 };
 
-struct ModelVelocitiesFixture
+struct ModelVelocitiesFixture : public testing::Test
 {
     ModelVelocitiesFixture()
+    {
+
+    }
+    void SetUp()
     {
         ClearLogOutput();
         model = new Model;
@@ -56,7 +62,7 @@ struct ModelVelocitiesFixture
         ClearLogOutput();
     }
 
-    ~ModelVelocitiesFixture()
+    void TearDown()
     {
         delete model;
     }
@@ -73,121 +79,111 @@ struct ModelVelocitiesFixture
     Vector3d point_position, point_velocity;
 };
 
-TEST_F(CalcVelocitiesTest, TestCalcPointSimple)
+TEST_F(ModelVelocitiesFixture, TestCalcPointSimple)
 {
-    ModelVelocitiesFixture m;
-    m.ref_body_id = 1;
-    m.QDot[0] = 1.;
-    m.point_position = Vector3d(1., 0., 0.);
-    m.point_velocity = CalcPointVelocity(*m.model, m.Q, m.QDot, m.ref_body_id, m.point_position);
+    ref_body_id = 1;
+    QDot[0] = 1.;
+    point_position = Vector3d(1., 0., 0.);
+    point_velocity = CalcPointVelocity(*model, Q, QDot, ref_body_id, point_position);
 
-    EXPECT_NEAR(0., m.point_velocity[0], TEST_PREC);
-    EXPECT_NEAR(1., m.point_velocity[1], TEST_PREC);
-    EXPECT_NEAR(0., m.point_velocity[2], TEST_PREC);
+    EXPECT_NEAR(0., point_velocity[0], TEST_PREC);
+    EXPECT_NEAR(1., point_velocity[1], TEST_PREC);
+    EXPECT_NEAR(0., point_velocity[2], TEST_PREC);
 
-//  LOG << "Point velocity = " << m.point_velocity << endl;
+//  LOG << "Point velocity = " << point_velocity << endl;
     //	cout << LogOutput.str() << endl;
 }
 
-TEST_F(CalcVelocitiesTest, TestCalcPointRotatedBaseSimple)
+TEST_F(ModelVelocitiesFixture, TestCalcPointRotatedBaseSimple)
 {
     // rotated first joint
-    ModelVelocitiesFixture m;
 
-    m.ref_body_id = 1;
-    m.Q[0] = M_PI * 0.5;
-    m.QDot[0] = 1.;
-    m.point_position = Vector3d(1., 0., 0.);
-    m.point_velocity = CalcPointVelocity(*m.model, m.Q, m.QDot, m.ref_body_id, m.point_position);
+    ref_body_id = 1;
+    Q[0] = M_PI * 0.5;
+    QDot[0] = 1.;
+    point_position = Vector3d(1., 0., 0.);
+    point_velocity = CalcPointVelocity(*model, Q, QDot, ref_body_id, point_position);
 
-    EXPECT_NEAR(-1., m.point_velocity[0], TEST_PREC);
-    EXPECT_NEAR(0., m.point_velocity[1], TEST_PREC);
-    EXPECT_NEAR(0., m.point_velocity[2], TEST_PREC);
+    EXPECT_NEAR(-1., point_velocity[0], TEST_PREC);
+    EXPECT_NEAR(0., point_velocity[1], TEST_PREC);
+    EXPECT_NEAR(0., point_velocity[2], TEST_PREC);
 
     //	cout << LogOutput.str() << endl;
 }
 
-TEST_F(CalcVelocitiesTest, TestCalcPointRotatingBodyB)
+TEST_F(ModelVelocitiesFixture, TestCalcPointRotatingBodyB)
 {
     // rotating second joint, point at third body
 
-    ModelVelocitiesFixture m;
-
-    m.ref_body_id = 3;
-    m.QDot[1] = 1.;
-    m.point_position = Vector3d(1., 0., 0.);
-    m.point_velocity = CalcPointVelocity(*m.model, m.Q, m.QDot, m.ref_body_id, m.point_position);
+    ref_body_id = 3;
+    QDot[1] = 1.;
+    point_position = Vector3d(1., 0., 0.);
+    point_velocity = CalcPointVelocity(*model, Q, QDot, ref_body_id, point_position);
 
     //	cout << LogOutput.str() << endl;
 
-    EXPECT_NEAR(0., m.point_velocity[0], TEST_PREC);
-    EXPECT_NEAR(0., m.point_velocity[1], TEST_PREC);
-    EXPECT_NEAR(-1., m.point_velocity[2], TEST_PREC);
+    EXPECT_NEAR(0., point_velocity[0], TEST_PREC);
+    EXPECT_NEAR(0., point_velocity[1], TEST_PREC);
+    EXPECT_NEAR(-1., point_velocity[2], TEST_PREC);
 }
 
-TEST_F(CalcVelocitiesTest, TestCalcPointRotatingBaseXAxis)
+TEST_F(ModelVelocitiesFixture, TestCalcPointRotatingBaseXAxis)
 {
     // also rotate the first joint and take a point that is
     // on the X direction
 
-    ModelVelocitiesFixture m;
-
-    m.ref_body_id = 3;
-    m.QDot[0] = 1.;
-    m.QDot[1] = 1.;
-    m.point_position = Vector3d(1., -1., 0.);
-    m.point_velocity = CalcPointVelocity(*m.model, m.Q, m.QDot, m.ref_body_id, m.point_position);
+    ref_body_id = 3;
+    QDot[0] = 1.;
+    QDot[1] = 1.;
+    point_position = Vector3d(1., -1., 0.);
+    point_velocity = CalcPointVelocity(*model, Q, QDot, ref_body_id, point_position);
 
     //	cout << LogOutput.str() << endl;
 
-    EXPECT_NEAR(0., m.point_velocity[0], TEST_PREC);
-    EXPECT_NEAR(2., m.point_velocity[1], TEST_PREC);
-    EXPECT_NEAR(-1., m.point_velocity[2], TEST_PREC);
+    EXPECT_NEAR(0., point_velocity[0], TEST_PREC);
+    EXPECT_NEAR(2., point_velocity[1], TEST_PREC);
+    EXPECT_NEAR(-1., point_velocity[2], TEST_PREC);
 }
 
-TEST_F(CalcVelocitiesTest, TestCalcPointRotatedBaseXAxis)
+TEST_F(ModelVelocitiesFixture, TestCalcPointRotatedBaseXAxis)
 {
     // perform the previous test with the first joint rotated by pi/2
     // upwards
 
-    ModelVelocitiesFixture m;
-
     ClearLogOutput();
 
-    m.ref_body_id = 3;
-    m.point_position = Vector3d(1., -1., 0.);
+    ref_body_id = 3;
+    point_position = Vector3d(1., -1., 0.);
 
-    m.Q[0] = M_PI * 0.5;
-    m.QDot[0] = 1.;
-    m.QDot[1] = 1.;
-    m.point_velocity = CalcPointVelocity(*m.model, m.Q, m.QDot, m.ref_body_id, m.point_position);
+    Q[0] = M_PI * 0.5;
+    QDot[0] = 1.;
+    QDot[1] = 1.;
+    point_velocity = CalcPointVelocity(*model, Q, QDot, ref_body_id, point_position);
 
     //	cout << LogOutput.str() << endl;
 
-    EXPECT_NEAR(-2., m.point_velocity[0], TEST_PREC);
-    EXPECT_NEAR(0., m.point_velocity[1], TEST_PREC);
-    EXPECT_NEAR(-1., m.point_velocity[2], TEST_PREC);
+    EXPECT_NEAR(-2., point_velocity[0], TEST_PREC);
+    EXPECT_NEAR(0., point_velocity[1], TEST_PREC);
+    EXPECT_NEAR(-1., point_velocity[2], TEST_PREC);
 }
 
-TEST_F(CalcVelocitiesTest, TestCalcPointBodyOrigin) {
+TEST_F(ModelVelocitiesFixture, TestCalcPointBodyOrigin) {
   // Checks whether the computation is also correct for points at the origin
   // of a body
 
-    ModelVelocitiesFixture m;
+  ref_body_id = body_b_id;
+  point_position = Vector3d (0., 0., 0.);
 
-  m.ref_body_id = m.body_b_id;
-  m.point_position = Vector3d (0., 0., 0.);
+  Q[0] = 0.;
+  QDot[0] = 1.;
 
-  m.Q[0] = 0.;
-  m.QDot[0] = 1.;
-
-  m.point_velocity = CalcPointVelocity(*m.model, m.Q, m.QDot, m.ref_body_id, m.point_position);
+  point_velocity = CalcPointVelocity(*model, Q, QDot, ref_body_id, point_position);
 
   // cout << LogOutput.str() << endl;
 
-  EXPECT_NEAR( 0., m.point_velocity[0], TEST_PREC);
-  EXPECT_NEAR( 1., m.point_velocity[1], TEST_PREC);
-  EXPECT_NEAR( 0., m.point_velocity[2], TEST_PREC);
+  EXPECT_NEAR( 0., point_velocity[0], TEST_PREC);
+  EXPECT_NEAR( 1., point_velocity[1], TEST_PREC);
+  EXPECT_NEAR( 0., point_velocity[2], TEST_PREC);
 }
 
 TEST_F( CalcVelocitiesTest,FixedJointCalcPointVelocity ) {
