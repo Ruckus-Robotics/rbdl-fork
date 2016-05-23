@@ -655,9 +655,11 @@ struct TwoArms12DoF
 
 };
 
-struct FixedBase6DoF12DoFFloatingBase
+struct FixedBase6DoF12DoFFloatingBase : public testing::Test
 {
-    FixedBase6DoF12DoFFloatingBase()
+    FixedBase6DoF12DoFFloatingBase(){}
+
+    void SetUp()
     {
         using namespace RigidBodyDynamics;
         using namespace RigidBodyDynamics::Math;
@@ -729,7 +731,7 @@ struct FixedBase6DoF12DoFFloatingBase
         ClearLogOutput();
     }
 
-    ~FixedBase6DoF12DoFFloatingBase()
+    void TearDown()
     {
         delete model;
     }
