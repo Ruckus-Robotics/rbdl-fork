@@ -420,9 +420,14 @@ struct FixedJoint2DoF
 
 /** \brief Fixture that contains two models of which one has one joint fixed.
 */
-struct FixedAndMovableJoint
+struct FixedAndMovableJoint : public testing::Test
 {
     FixedAndMovableJoint()
+    {
+
+    }
+
+    void SetUp()
     {
         using namespace RigidBodyDynamics;
         using namespace RigidBodyDynamics::Math;
@@ -487,7 +492,7 @@ struct FixedAndMovableJoint
         ClearLogOutput();
     }
 
-    ~FixedAndMovableJoint()
+    void TearDown()
     {
         delete model_movable;
         delete model_fixed;
