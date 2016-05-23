@@ -103,11 +103,13 @@ if (CATKIN_ENABLE_TESTING)
     catkin_add_gtest(CalcVelocitiesTests tests/CalcVelocitiesTests.cc)
     catkin_add_gtest(CompositeRigidBodyTests tests/CompositeRigidBodyTests.cc)
     catkin_add_gtest(ContactsTests tests/ContactsTests.cc)
+    catkin_add_gtest(CustomJointMultiBodyTests tests/CustomJointMultiBodyTests.cc)
 	#
 	target_link_libraries(BodyTests ${PROJECT_NAME})
 	target_link_libraries(CalcAccelerationsTests ${PROJECT_NAME})
     target_link_libraries(CalcVelocitiesTests ${PROJECT_NAME})
     target_link_libraries(CompositeRigidBodyTests ${PROJECT_NAME})
     target_link_libraries(ContactsTests ${PROJECT_NAME})
+    target_link_libraries(CustomJointMultiBodyTests ${PROJECT_NAME})
 
 endif()
