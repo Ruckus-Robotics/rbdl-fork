@@ -74,9 +74,13 @@ public:
     RigidBodyDynamics::Math::Vector3d point_position, point_acceleration;
 };
 
-struct FixedBase6DoF
+struct FixedBase6DoF : public testing::Test
 {
     FixedBase6DoF()
+    {
+
+    }
+    void SetUp()
     {
         using namespace RigidBodyDynamics;
         using namespace RigidBodyDynamics::Math;
@@ -160,7 +164,7 @@ struct FixedBase6DoF
         ClearLogOutput();
     }
 
-    ~FixedBase6DoF()
+    void TearDown()
     {
         delete model;
     }
