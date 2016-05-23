@@ -1,13 +1,14 @@
-#include <UnitTest++.h>
 
+#include <gtest/gtest.h>
 #include <iostream>
 
-#include "rbdl/Logging.h"
+#include "UnitTestUtils.hpp"
 
-#include "rbdl/Model.h"
-#include "rbdl/Contacts.h"
-#include "rbdl/Dynamics.h"
-#include "rbdl/Kinematics.h"
+#include "rbdl_dynamics/Logging.h"
+#include "rbdl_dynamics/Model.h"
+#include "rbdl_dynamics/Contacts.h"
+#include "rbdl_dynamics/Dynamics.h"
+#include "rbdl_dynamics/Kinematics.h"
 
 using namespace std;
 using namespace RigidBodyDynamics;
@@ -15,8 +16,14 @@ using namespace RigidBodyDynamics::Math;
 
 const double TEST_PREC = 1.0e-14;
 
-struct ImpulsesFixture {
-  ImpulsesFixture () {
+struct ImpulsesFixture : public testing::Test
+{
+  ImpulsesFixture ()
+  {
+
+  }
+    void SetUp()
+  {
     ClearLogOutput();
     model = new Model;
 
@@ -55,7 +62,7 @@ struct ImpulsesFixture {
     ClearLogOutput();
   }
 
-  ~ImpulsesFixture () {
+  void TearDown () {
     delete model;
   }
   Model *model;
@@ -75,7 +82,7 @@ struct ImpulsesFixture {
   ConstraintSet constraint_set;
 };
 
-TEST_FIXTURE(ImpulsesFixture, TestContactImpulse) {
+TEST_F(ImpulsesFixture, TestContactImpulse) {
   constraint_set.AddConstraint(contact_body_id, contact_point, Vector3d (1., 0., 0.), NULL, 0.); 
   constraint_set.AddConstraint(contact_body_id, contact_point, Vector3d (0., 1., 0.), NULL, 0.); 
   constraint_set.AddConstraint(contact_body_id, contact_point, Vector3d (0., 0., 1.), NULL, 0.); 
@@ -109,10 +116,10 @@ TEST_FIXTURE(ImpulsesFixture, TestContactImpulse) {
   }
 
   // cout << "Point Velocity = " << point_velocity << endl;
-  CHECK_ARRAY_CLOSE (Vector3d (0., 0., 0.).data(), point_velocity.data(), 3, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (Vector3d (0., 0., 0.).data(), point_velocity.data(), 3, TEST_PREC));
 }
 
-TEST_FIXTURE(ImpulsesFixture, TestContactImpulseRotated) {
+TEST_F(ImpulsesFixture, TestContactImpulseRotated) {
   constraint_set.AddConstraint(contact_body_id, contact_point, Vector3d (1., 0., 0.), NULL, 0.); 
   constraint_set.AddConstraint(contact_body_id, contact_point, Vector3d (0., 1., 0.), NULL, 0.); 
   constraint_set.AddConstraint(contact_body_id, contact_point, Vector3d (0., 0., 1.), NULL, 0.); 
@@ -152,10 +159,10 @@ TEST_FIXTURE(ImpulsesFixture, TestContactImpulseRotated) {
   }
 
   // cout << "Point Velocity = " << point_velocity << endl;
-  CHECK_ARRAY_CLOSE (Vector3d (0., 0., 0.).data(), point_velocity.data(), 3, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (Vector3d (0., 0., 0.).data(), point_velocity.data(), 3, TEST_PREC));
 }
 
-TEST_FIXTURE(ImpulsesFixture, TestContactImpulseRotatedCollisionVelocity) {
+TEST_F(ImpulsesFixture, TestContactImpulseRotatedCollisionVelocity) {
   constraint_set.AddConstraint(contact_body_id, contact_point, Vector3d (1., 0., 0.), NULL, 1.); 
   constraint_set.AddConstraint(contact_body_id, contact_point, Vector3d (0., 1., 0.), NULL, 2.); 
   constraint_set.AddConstraint(contact_body_id, contact_point, Vector3d (0., 0., 1.), NULL, 3.); 
@@ -197,10 +204,10 @@ TEST_FIXTURE(ImpulsesFixture, TestContactImpulseRotatedCollisionVelocity) {
   }
 
   // cout << "Point Velocity = " << point_velocity << endl;
-  CHECK_ARRAY_CLOSE (Vector3d (1., 2., 3.).data(), point_velocity.data(), 3, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (Vector3d (1., 2., 3.).data(), point_velocity.data(), 3, TEST_PREC));
 }
 
-TEST_FIXTURE(ImpulsesFixture, TestContactImpulseRangeSpaceSparse) {
+TEST_F(ImpulsesFixture, TestContactImpulseRangeSpaceSparse) {
   Q[0] = 0.2;
   Q[1] = -0.5;
   Q[2] = 0.1;
@@ -235,11 +242,11 @@ TEST_FIXTURE(ImpulsesFixture, TestContactImpulseRangeSpaceSparse) {
   Vector3d point_velocity_direct = CalcPointVelocity (*model, Q, qdot_post_direct, contact_body_id, contact_point, true);
   Vector3d point_velocity_rangespace = CalcPointVelocity (*model, Q, qdot_post_rangespace, contact_body_id, contact_point, true);
 
-  CHECK_ARRAY_CLOSE (qdot_post_direct.data(), qdot_post_rangespace.data(), qdot_post_direct.rows(), TEST_PREC);
-  CHECK_ARRAY_CLOSE (Vector3d (1., 2., 3.).data(), point_velocity_rangespace.data(), 3, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (qdot_post_direct.data(), qdot_post_rangespace.data(), qdot_post_direct.rows(), TEST_PREC));
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (Vector3d (1., 2., 3.).data(), point_velocity_rangespace.data(), 3, TEST_PREC));
 }
 
-TEST_FIXTURE(ImpulsesFixture, TestContactImpulseNullSpace) {
+TEST_F(ImpulsesFixture, TestContactImpulseNullSpace) {
   Q[0] = 0.2;
   Q[1] = -0.5;
   Q[2] = 0.1;
@@ -274,6 +281,12 @@ TEST_FIXTURE(ImpulsesFixture, TestContactImpulseNullSpace) {
   Vector3d point_velocity_direct = CalcPointVelocity (*model, Q, qdot_post_direct, contact_body_id, contact_point, true);
   Vector3d point_velocity_nullspace = CalcPointVelocity (*model, Q, qdot_post_nullspace, contact_body_id, contact_point, true);
 
-  CHECK_ARRAY_CLOSE (qdot_post_direct.data(), qdot_post_nullspace.data(), qdot_post_direct.rows(), TEST_PREC);
-  CHECK_ARRAY_CLOSE (Vector3d (1., 2., 3.).data(), point_velocity_nullspace.data(), 3, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (qdot_post_direct.data(), qdot_post_nullspace.data(), qdot_post_direct.rows(), TEST_PREC));
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (Vector3d (1., 2., 3.).data(), point_velocity_nullspace.data(), 3, TEST_PREC));
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
