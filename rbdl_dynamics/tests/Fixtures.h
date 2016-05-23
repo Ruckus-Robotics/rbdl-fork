@@ -321,16 +321,21 @@ public:
     RigidBodyDynamics::Math::VectorNd Tau;
 };
 
-struct SimpleFixture
+struct SimpleFixture : public testing::Test
 {
     SimpleFixture()
+    {
+
+    }
+
+    void SetUp()
     {
         ClearLogOutput();
         model = new RigidBodyDynamics::Model;
         model->gravity = RigidBodyDynamics::Math::Vector3d(0., -9.81, 0.);
     }
 
-    ~SimpleFixture()
+    void TearDown()
     {
         delete model;
     }
@@ -351,9 +356,14 @@ struct SimpleFixture
     RigidBodyDynamics::Math::VectorNd Tau;
 };
 
-struct FixedJoint2DoF
+struct FixedJoint2DoF : public testing::Test
 {
     FixedJoint2DoF()
+    {
+
+    }
+
+    void SetUp()
     {
         using namespace RigidBodyDynamics;
         using namespace RigidBodyDynamics::Math;
@@ -400,7 +410,7 @@ struct FixedJoint2DoF
         ClearLogOutput();
     }
 
-    ~FixedJoint2DoF()
+    void TearDown()
     {
         delete model;
     }
@@ -553,9 +563,13 @@ struct FixedAndMovableJoint : public testing::Test
 
 /** Model with two moving bodies and one fixed body
 */
-struct RotZRotZYXFixed
+struct RotZRotZYXFixed : public testing::Test
 {
     RotZRotZYXFixed()
+    {
+
+    }
+    void SetUp()
     {
         using namespace RigidBodyDynamics;
         using namespace RigidBodyDynamics::Math;
@@ -586,7 +600,7 @@ struct RotZRotZYXFixed
         ClearLogOutput();
     }
 
-    ~RotZRotZYXFixed()
+    void TearDown()
     {
         delete model;
     }
