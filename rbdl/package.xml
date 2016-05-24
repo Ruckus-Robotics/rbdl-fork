@@ -16,6 +16,7 @@
   <exec_depend>rbdl_benchmark</exec_depend>
   <exec_depend>rbdl_luamodel</exec_depend>
   <exec_depend>rbdl_urdfreader</exec_depend>
+  <exec_depend>frl</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
    <export>
