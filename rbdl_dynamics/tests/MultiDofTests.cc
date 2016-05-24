@@ -135,7 +135,7 @@ void ConvertQAndQDotFromEmulated(
     }
 }
 
-TEST(SphericalJoint, TestQuaternionIntegration)
+TEST_F(SphericalJoint, TestQuaternionIntegration)
 {
     double timestep = 0.001;
 
@@ -635,7 +635,7 @@ TEST_F(SphericalJoint, TestEulerZYXvsEmulatedCRBA)
     EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(H_emulated.data(), H_eulerzyx.data(), emulated_model.q_size * emulated_model.q_size, TEST_PREC));
 }
 
-TEST (SphericalJoint, TestJointTypeTranslationZYX)
+TEST_F(SphericalJoint, TestJointTypeTranslationZYX)
 {
     Model model_emulated;
     Model model_3dof;
@@ -686,7 +686,7 @@ TEST (SphericalJoint, TestJointTypeTranslationZYX)
     EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(H_emulated.data(), H_3dof.data(), q.size() * q.size(), TEST_PREC));
 }
 
-TEST (SphericalJoint, TestJointTypeEulerXYZ)
+TEST_F(SphericalJoint, TestJointTypeEulerXYZ)
 {
     Model model_emulated;
     Model model_3dof;
@@ -737,7 +737,7 @@ TEST (SphericalJoint, TestJointTypeEulerXYZ)
     EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(H_emulated.data(), H_3dof.data(), q.size() * q.size(), TEST_PREC));
 }
 
-TEST (SphericalJoint, TestJointTypeEulerYXZ)
+TEST_F(SphericalJoint, TestJointTypeEulerYXZ)
 {
     Model model_emulated;
     Model model_3dof;

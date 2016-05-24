@@ -534,7 +534,7 @@ TEST_F(KinematicsFixture6DoF, FixedJointBodyCalcBodyToBaseRotated)
 
     Joint joint_rot_z(SpatialVector(0., 0., 1., 0., 0., 0.));
     model.AddBody(0, Xtrans(Vector3d(0., 0., 0.)), joint_rot_z, body);
-    unsigned int fixed_body_id = model.AppendBody(Xtrans(Vector3d(1., 0., 0.)), Joint(JointTypeFixed), fixed_body));
+    unsigned int fixed_body_id = model.AppendBody(Xtrans(Vector3d(1., 0., 0.)), Joint(JointTypeFixed), fixed_body);
 
     VectorNd Q = VectorNd::Zero(model.dof_count);
 
@@ -543,7 +543,7 @@ TEST_F(KinematicsFixture6DoF, FixedJointBodyCalcBodyToBaseRotated)
     Vector3d base_coords = CalcBodyToBaseCoordinates(model, Q, fixed_body_id, Vector3d(1., 0., 0.));
     //	cout << LogOutput.str() << endl;
 
-    EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(Vector3d(0., 2., 0.).data(), base_coords.data(), 3, TEST_PREC);
+    EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(Vector3d(0., 2., 0.).data(), base_coords.data(), 3, TEST_PREC));
 }
 
 TEST_F(KinematicsFixture6DoF, FixedJointBodyCalcBaseToBody)

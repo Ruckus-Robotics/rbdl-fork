@@ -1,19 +1,25 @@
-#include <UnitTest++.h>
+#include <gtest/gtest.h>
+
+#include "UnitTestUtils.hpp"
 
 #include <iostream>
 
-#include "rbdl/Logging.h"
-
-#include "rbdl/Model.h"
-#include "rbdl/Contacts.h"
-#include "rbdl/Dynamics.h"
-#include "rbdl/Kinematics.h"
+#include "rbdl_dynamics/Logging.h"
+#include "rbdl_dynamics/Model.h"
+#include "rbdl_dynamics/Contacts.h"
+#include "rbdl_dynamics/Dynamics.h"
+#include "rbdl_dynamics/Kinematics.h"
 
 using namespace std;
 using namespace RigidBodyDynamics;
 using namespace RigidBodyDynamics::Math;
 
 const double TEST_PREC = 1.0e-13;
+
+struct TweLegmodelTests : public testing::Test
+{
+    
+};
 
 unsigned int hip_id,
              upper_leg_right_id,
@@ -272,7 +278,7 @@ void copy_values (T *dest, const T *src, size_t count) {
   memcpy (dest, src, count * sizeof (T));
 }
 
-TEST ( TestForwardDynamicsContactsDirectFootmodel ) {
+TEST (TweLegmodelTests, TestForwardDynamicsContactsDirectFootmodel ) {
   Model* model = new Model;
 
   init_model(model);
@@ -335,8 +341,8 @@ TEST ( TestForwardDynamicsContactsDirectFootmodel ) {
   contact_force[0] = constraint_set_left.force[0];
   contact_force[1] = constraint_set_left.force[1];
 
-  CHECK_EQUAL (body_id, foot_left_id);
-  CHECK_EQUAL (contact_point, heel_point);
+  EXPECT_EQ (body_id, foot_left_id);
+  EXPECT_EQ (contact_point, heel_point);
 
   //	cout << LogOutput.str() << endl;
   contact_accel_left = CalcPointAcceleration (*model, Q, QDot, QDDot, foot_left_id, heel_point);
@@ -344,12 +350,12 @@ TEST ( TestForwardDynamicsContactsDirectFootmodel ) {
   //	cout << contact_force << endl;
   //	cout << contact_accel_left << endl;
 
-  CHECK_ARRAY_CLOSE (Vector3d (0., 0., 0.).data(), contact_accel_left.data(), 3, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (Vector3d (0., 0., 0.).data(), contact_accel_left.data(), 3, TEST_PREC));
 
   delete model;
 }
 
-TEST ( TestClearContactsInertiaMatrix ) {
+TEST (TweLegmodelTests, TestClearContactsInertiaMatrix ) {
   Model* model = new Model;
 
   init_model(model);
@@ -398,7 +404,13 @@ TEST ( TestClearContactsInertiaMatrix ) {
   ForwardDynamicsContactsDirect (*model, Q, QDot, Tau, constraint_set_right, QDDot_lag);
   ForwardDynamicsContactsKokkevis (*model, Q, QDot, Tau, constraint_set_right, QDDot_aba);
 
-  CHECK_ARRAY_CLOSE (QDDot_lag.data(), QDDot_aba.data(), QDDot.size(), TEST_PREC * QDDot_lag.norm());
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (QDDot_lag.data(), QDDot_aba.data(), QDDot.size(), TEST_PREC * QDDot_lag.norm()));
 
   delete model;
+}
+
+int main(int argc, char **argv)
+{
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }

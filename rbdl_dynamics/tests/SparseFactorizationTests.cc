@@ -112,7 +112,7 @@ TEST_F (FixedBase6DoF12DoFFloatingBase, ForwardDynamicsContactsSparse) {
   EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (QDDot.data(), QDDot_var1.data(), QDDot.size(), TEST_PREC));
 }
 
-TEST (FloatingBase12DoF,  TestSparseFactorizationMultiDof) {
+TEST_F (FloatingBase12DoF,  TestSparseFactorizationMultiDof) {
   Model model_emulated;
   Model model_3dof;
 
@@ -189,7 +189,7 @@ TEST (FloatingBase12DoF,  TestSparseFactorizationMultiDof) {
   EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (x_emulated.data(), x_3dof.data(), x_emulated.size(), 1.0e-9));
 }
 
-TEST (FloatingBase12DoF,  TestSparseFactorizationMultiDofAndFixed) {
+TEST_F (FloatingBase12DoF,  TestSparseFactorizationMultiDofAndFixed) {
   Model model_emulated;
   Model model_3dof;
 

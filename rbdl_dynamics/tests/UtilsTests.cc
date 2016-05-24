@@ -1,4 +1,6 @@
-#include <UnitTest++.h>
+#include <gtest/gtest.h>
+
+#include "UnitTestUtils.hpp"
 
 #include <iostream>
 
@@ -15,7 +17,12 @@ using namespace std;
 using namespace RigidBodyDynamics;
 using namespace RigidBodyDynamics::Math;
 
-TEST_FIXTURE(FloatingBase12DoF, TestKineticEnergy) {
+struct UtilsTests : public testing::Test
+{
+
+};
+
+TEST_F(FloatingBase12DoF, TestKineticEnergy) {
   VectorNd q = VectorNd::Zero(model->q_size);
   VectorNd qdot = VectorNd::Zero(model->q_size);
 
@@ -30,10 +37,10 @@ TEST_FIXTURE(FloatingBase12DoF, TestKineticEnergy) {
   double kinetic_energy_ref = 0.5 * qdot.transpose() * H * qdot;
   double kinetic_energy = Utils::CalcKineticEnergy (*model, q, qdot);
 
-  CHECK_EQUAL (kinetic_energy_ref, kinetic_energy);
+  EXPECT_EQ (kinetic_energy_ref, kinetic_energy);
 }
 
-TEST(TestPotentialEnergy) {
+TEST(UtilsTests, TestPotentialEnergy) {
   Model model;
   Matrix3d inertia = Matrix3d::Zero(3,3);
   Body body (0.5, Vector3d (0., 0., 0.), inertia);
@@ -47,14 +54,14 @@ TEST(TestPotentialEnergy) {
 
   VectorNd q = VectorNd::Zero(model.q_size);
   double potential_energy_zero = Utils::CalcPotentialEnergy (model, q);
-  CHECK_EQUAL (0., potential_energy_zero);
+  EXPECT_EQ (0., potential_energy_zero);
 
   q[1] = 1.;
   double potential_energy_lifted = Utils::CalcPotentialEnergy (model, q);
-  CHECK_EQUAL (4.905, potential_energy_lifted);
+  EXPECT_EQ (4.905, potential_energy_lifted);
 }
 
-TEST(TestCOMSimple) {
+TEST(UtilsTests, TestCOMSimple) {
   Model model;
   Matrix3d inertia = Matrix3d::Zero(3,3);
   Body body (123., Vector3d (0., 0., 0.), inertia);
@@ -74,22 +81,22 @@ TEST(TestCOMSimple) {
   Vector3d com_velocity;
   Utils::CalcCenterOfMass (model, q, qdot, mass, com, &com_velocity);
 
-  CHECK_EQUAL (123., mass);
-  CHECK_EQUAL (Vector3d (0., 0., 0.), com);
-  CHECK_EQUAL (Vector3d (0., 0., 0.), com_velocity);
+  EXPECT_EQ (123., mass);
+  EXPECT_EQ (Vector3d (0., 0., 0.), com);
+  EXPECT_EQ (Vector3d (0., 0., 0.), com_velocity);
 
   q[1] = 1.;
   Utils::CalcCenterOfMass (model, q, qdot, mass, com, &com_velocity);
-  CHECK_EQUAL (Vector3d (0., 1., 0.), com);
-  CHECK_EQUAL (Vector3d (0., 0., 0.), com_velocity);
+  EXPECT_EQ (Vector3d (0., 1., 0.), com);
+  EXPECT_EQ (Vector3d (0., 0., 0.), com_velocity);
 
   qdot[1] = 1.;
   Utils::CalcCenterOfMass (model, q, qdot, mass, com, &com_velocity);
-  CHECK_EQUAL (Vector3d (0., 1., 0.), com);
-  CHECK_EQUAL (Vector3d (0., 1., 0.), com_velocity);
+  EXPECT_EQ (Vector3d (0., 1., 0.), com);
+  EXPECT_EQ (Vector3d (0., 1., 0.), com_velocity);
 }
 
-TEST(TestAngularMomentumSimple) {
+TEST(UtilsTests, TestAngularMomentumSimple) {
   Model model;
   Matrix3d inertia = Matrix3d::Zero(3,3);
   inertia(0,0) = 1.1;
@@ -114,25 +121,25 @@ TEST(TestAngularMomentumSimple) {
 
   qdot << 1., 0., 0.;
   Utils::CalcCenterOfMass (model, q, qdot, mass, com, NULL, &angular_momentum);
-  CHECK_EQUAL (Vector3d (1.1, 0., 0.), angular_momentum);
+  EXPECT_EQ (Vector3d (1.1, 0., 0.), angular_momentum);
 
   qdot << 0., 1., 0.;
   Utils::CalcCenterOfMass (model, q, qdot, mass, com, NULL, &angular_momentum);
-  CHECK_EQUAL (Vector3d (0., 2.2, 0.), angular_momentum);
+  EXPECT_EQ (Vector3d (0., 2.2, 0.), angular_momentum);
 
   qdot << 0., 0., 1.;
   Utils::CalcCenterOfMass (model, q, qdot, mass, com, NULL, &angular_momentum);
-  CHECK_EQUAL (Vector3d (0., 0., 3.3), angular_momentum);
+  EXPECT_EQ (Vector3d (0., 0., 3.3), angular_momentum);
 }
 
-TEST_FIXTURE (TwoArms12DoF, TestAngularMomentumSimple) {
+TEST_F (TwoArms12DoF, TestAngularMomentumSimple) {
   double mass;
   Vector3d com;
   Vector3d angular_momentum;
 
   Utils::CalcCenterOfMass (*model, q, qdot, mass, com, NULL, &angular_momentum);
 
-  CHECK_EQUAL (Vector3d (0., 0., 0.), angular_momentum);
+  EXPECT_EQ (Vector3d (0., 0., 0.), angular_momentum);
 
   qdot[0] = 1.;
   qdot[1] = 2.;
@@ -141,7 +148,7 @@ TEST_FIXTURE (TwoArms12DoF, TestAngularMomentumSimple) {
   Utils::CalcCenterOfMass (*model, q, qdot, mass, com, NULL, &angular_momentum);
 
   // only a rough guess from test calculation
-  CHECK_ARRAY_CLOSE (Vector3d (3.3, 2.54, 1.5).data(), angular_momentum.data(), 3, 1.0e-1);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (Vector3d (3.3, 2.54, 1.5).data(), angular_momentum.data(), 3, 1.0e-1));
 
   qdot[3] = -qdot[0];
   qdot[4] = -qdot[1];
@@ -150,7 +157,13 @@ TEST_FIXTURE (TwoArms12DoF, TestAngularMomentumSimple) {
   ClearLogOutput();
   Utils::CalcCenterOfMass (*model, q, qdot, mass, com, NULL, &angular_momentum);
 
-  CHECK (angular_momentum[0] == 0);
-  CHECK (angular_momentum[1] < 0);
-  CHECK (angular_momentum[2] == 0.);
+  EXPECT_TRUE (angular_momentum[0] == 0);
+  EXPECT_TRUE (angular_momentum[1] < 0);
+  EXPECT_TRUE (angular_momentum[2] == 0.);
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

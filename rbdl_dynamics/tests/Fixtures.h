@@ -614,9 +614,14 @@ struct RotZRotZYXFixed : public testing::Test
     RigidBodyDynamics::Math::SpatialTransform fixture_transform_fixed;
 };
 
-struct TwoArms12DoF
+struct TwoArms12DoF : public testing::Test
 {
     TwoArms12DoF()
+    {
+
+    }
+
+    void SetUp()
     {
         using namespace RigidBodyDynamics;
         using namespace RigidBodyDynamics::Math;
@@ -658,7 +663,7 @@ struct TwoArms12DoF
         ClearLogOutput();
     }
 
-    ~TwoArms12DoF()
+    void TearDown()
     {
         delete model;
     }

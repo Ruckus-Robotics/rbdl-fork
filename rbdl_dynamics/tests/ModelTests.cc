@@ -261,7 +261,7 @@ TEST_F (ModelFixture, TestTransformBaseToLocal)
     EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(base_coords.data(), base_coords_back.data(), 3, TEST_PREC));
 }
 
-TEST (ModelFixture,Model2DoFJoint)
+TEST_F (ModelFixture,Model2DoFJoint)
 {
     // the standard modeling using a null body
     Body null_body;
@@ -299,7 +299,7 @@ TEST (ModelFixture,Model2DoFJoint)
     EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(QDDot_std.data(), QDDot_2.data(), model_std.dof_count, TEST_PREC));
 }
 
-TEST (ModelFixture,Model3DoFJoint)
+TEST_F (ModelFixture,Model3DoFJoint)
 {
     // the standard modeling using a null body
     Body null_body;
@@ -352,7 +352,7 @@ TEST (ModelFixture,Model3DoFJoint)
     EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(QDDot_std.data(), QDDot_2.data(), model_std.dof_count, TEST_PREC));
 }
 
-TEST (ModelFixture,Model6DoFJoint)
+TEST_F (ModelFixture,Model6DoFJoint)
 {
     // the standard modeling using a null body
     Body null_body;
@@ -411,7 +411,7 @@ TEST (ModelFixture,Model6DoFJoint)
     EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(QDDot_std.data(), QDDot_2.data(), model_std.dof_count, TEST_PREC));
 }
 
-TEST (ModelFixture,ModelFixedJointQueryBodyId)
+TEST_F (ModelFixture,ModelFixedJointQueryBodyId)
 {
     // the standard modeling using a null body
     Body null_body;
@@ -433,7 +433,7 @@ TEST (ModelFixture,ModelFixedJointQueryBodyId)
  * newly added parent is actually the moving body that the fixed body is
  * attached to.
  */
-TEST (ModelFixture,ModelAppendToFixedBody)
+TEST_F (ModelFixture,ModelAppendToFixedBody)
 {
     Body null_body;
     Body body(1., Vector3d(1., 0.4, 0.4), Vector3d(1., 1., 1.));
@@ -452,7 +452,7 @@ TEST (ModelFixture,ModelAppendToFixedBody)
 }
 
 // Adds a fixed body to another fixed body.
-TEST (ModelFixture,ModelAppendFixedToFixedBody)
+TEST_F (ModelFixture,ModelAppendFixedToFixedBody)
 {
     Body null_body;
 
@@ -491,7 +491,7 @@ TEST (ModelFixture,ModelAppendFixedToFixedBody)
 
 // Ensures that the transformations of the movable parent and fixed joint
 // frame is in proper order
-TEST (ModelFixture,ModelFixedJointRotationOrderTranslationRotation)
+TEST_F (ModelFixture,ModelFixedJointRotationOrderTranslationRotation)
 {
     // the standard modeling using a null body
     Body null_body;
@@ -518,7 +518,7 @@ TEST (ModelFixture,ModelFixedJointRotationOrderTranslationRotation)
 
 // Ensures that the transformations of the movable parent and fixed joint
 // frame is in proper order
-TEST (ModelFixture,ModelFixedJointRotationOrderRotationTranslation)
+TEST_F (ModelFixture,ModelFixedJointRotationOrderRotationTranslation)
 {
     // the standard modeling using a null body
     Body null_body;
@@ -540,10 +540,10 @@ TEST (ModelFixture,ModelFixedJointRotationOrderRotationTranslation)
     Q[0] = 45 * M_PI / 180.;
     Vector3d point = CalcBodyToBaseCoordinates(model, Q, body_after_fixed, Vector3d(0., 1., 0.));
 
-    EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(Vector3d(-1., 2., 0.).data(), point.data(), 3, TEST_PREC);
+    EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(Vector3d(-1., 2., 0.).data(), point.data(), 3, TEST_PREC));
 }
 
-TEST (ModelFixture,ModelGetBodyName)
+TEST_F (ModelFixture,ModelGetBodyName)
 {
     Body null_body;
     Body body(1., Vector3d(1., 0.4, 0.4), Vector3d(1., 1., 1.));
@@ -611,7 +611,7 @@ TEST_F(RotZRotZYXFixed, ModelSetJointFrame)
     EXPECT_TRUE(unit_test_utils::checkArraysEq(Vector3d(0., 0., 0.).data(), transform_root.r.data(), 3));
 }
 
-TEST (ModelFixture,CalcBodyWorldOrientationFixedJoint)
+TEST_F (ModelFixture,CalcBodyWorldOrientationFixedJoint)
 {
     Model model_fixed;
     Model model_movable;

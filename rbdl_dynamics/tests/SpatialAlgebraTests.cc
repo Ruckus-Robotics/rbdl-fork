@@ -287,7 +287,7 @@ TEST(SpatialAlgebraTests, TestSpatialTransformApply) {
 
   // cout << (v_66_res - v_st_res).transpose() << endl;
 
-  CHECK_ARRAY_CLOSE (v_66_res.data(), v_st_res.data(), 6, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (v_66_res.data(), v_st_res.data(), 6, TEST_PREC));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialTransformApplyTranspose) {
@@ -311,7 +311,7 @@ TEST(SpatialAlgebraTests, TestSpatialTransformApplyTranspose) {
 
   // cout << (v_66_res - v_st_res).transpose() << endl;
 
-  CHECK_ARRAY_CLOSE (v_66_res.data(), v_st_res.data(), 6, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (v_66_res.data(), v_st_res.data(), 6, TEST_PREC));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialTransformApplyAdjoint) {
@@ -328,7 +328,7 @@ TEST(SpatialAlgebraTests, TestSpatialTransformApplyAdjoint) {
   SpatialVector f_apply = X.applyAdjoint(f);
   SpatialVector f_matrix = X_adjoint * f;
 
-  CHECK_ARRAY_CLOSE (f_matrix.data(), f_apply.data(), 6, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (f_matrix.data(), f_apply.data(), 6, TEST_PREC));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialTransformToMatrix) {
@@ -345,7 +345,7 @@ TEST(SpatialAlgebraTests, TestSpatialTransformToMatrix) {
   //	SpatialMatrix X_diff = X_st.toMatrix() - X_matrix;
   //	cout << "Error: " << endl << X_diff << endl;
 
-  CHECK_ARRAY_CLOSE (X_matrix.data(), X_st.toMatrix().data(), 36, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (X_matrix.data(), X_st.toMatrix().data(), 36, TEST_PREC));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialTransformToMatrixAdjoint) {
@@ -362,7 +362,7 @@ TEST(SpatialAlgebraTests, TestSpatialTransformToMatrixAdjoint) {
   //	SpatialMatrix X_diff = X_st.toMatrixAdjoint() - spatial_adjoint(X_matrix);
   //	cout << "Error: " << endl << X_diff << endl;
 
-  CHECK_ARRAY_CLOSE (spatial_adjoint(X_matrix).data(), X_st.toMatrixAdjoint().data(), 36, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (spatial_adjoint(X_matrix).data(), X_st.toMatrixAdjoint().data(), 36, TEST_PREC));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialTransformToMatrixTranspose) {
@@ -384,7 +384,7 @@ TEST(SpatialAlgebraTests, TestSpatialTransformToMatrixTranspose) {
   //	cout << "X_st: " << endl << X_st.toMatrixTranspose() << endl;
   //	cout << "X: " << endl << X_matrix_transposed() << endl;
 
-  CHECK_ARRAY_CLOSE (X_matrix_transposed.data(), X_st.toMatrixTranspose().data(), 36, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (X_matrix_transposed.data(), X_st.toMatrixTranspose().data(), 36, TEST_PREC));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialTransformMultiply) {
@@ -411,7 +411,7 @@ TEST(SpatialAlgebraTests, TestSpatialTransformMultiply) {
   //	SpatialMatrix X_diff = X_st_res.toMatrix() - X_matrix_res;
   //	cout << "Error: " << endl << X_diff << endl;
 
-  CHECK_ARRAY_CLOSE (X_matrix_res.data(), X_st_res.toMatrix().data(), 36, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (X_matrix_res.data(), X_st_res.toMatrix().data(), 36, TEST_PREC));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialTransformMultiplyEqual) {
@@ -439,30 +439,30 @@ TEST(SpatialAlgebraTests, TestSpatialTransformMultiplyEqual) {
   //	SpatialMatrix X_diff = X_st_res.toMatrix() - X_matrix_res;
   //	cout << "Error: " << endl << X_diff << endl;
 
-  CHECK_ARRAY_CLOSE (X_matrix_res.data(), X_st_res.toMatrix().data(), 36, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (X_matrix_res.data(), X_st_res.toMatrix().data(), 36, TEST_PREC));
 }
 
 TEST(SpatialAlgebraTests, TestXrotAxis) {
   SpatialTransform X_rotX = Xrotx (M_PI * 0.15);
   SpatialTransform X_rotX_axis = Xrot (M_PI * 0.15, Vector3d (1., 0., 0.));
 
-  CHECK_ARRAY_CLOSE (X_rotX.toMatrix().data(), X_rotX_axis.toMatrix().data(), 36, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (X_rotX.toMatrix().data(), X_rotX_axis.toMatrix().data(), 36, TEST_PREC));
 
   // all the other axes
   SpatialTransform X_rotX_90 = Xrotx (M_PI * 0.5);
   SpatialTransform X_rotX_90_axis = Xrot (M_PI * 0.5, Vector3d (1., 0., 0.));
 
-  CHECK_ARRAY_CLOSE (X_rotX_90.toMatrix().data(), X_rotX_90_axis.toMatrix().data(), 36, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (X_rotX_90.toMatrix().data(), X_rotX_90_axis.toMatrix().data(), 36, TEST_PREC));
 
   SpatialTransform X_rotY_90 = Xroty (M_PI * 0.5);
   SpatialTransform X_rotY_90_axis = Xrot (M_PI * 0.5, Vector3d (0., 1., 0.));
 
-  CHECK_ARRAY_CLOSE (X_rotY_90.toMatrix().data(), X_rotY_90_axis.toMatrix().data(), 36, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (X_rotY_90.toMatrix().data(), X_rotY_90_axis.toMatrix().data(), 36, TEST_PREC));
 
   SpatialTransform X_rotZ_90 = Xrotz (M_PI * 0.5);
   SpatialTransform X_rotZ_90_axis = Xrot (M_PI * 0.5, Vector3d (0., 0., 1.));
 
-  CHECK_ARRAY_CLOSE (X_rotZ_90.toMatrix().data(), X_rotZ_90_axis.toMatrix().data(), 36, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (X_rotZ_90.toMatrix().data(), X_rotZ_90_axis.toMatrix().data(), 36, TEST_PREC));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialTransformApplySpatialRigidBodyInertiaAdd) {
@@ -484,12 +484,12 @@ TEST(SpatialAlgebraTests, TestSpatialTransformApplySpatialRigidBodyInertiaAdd) {
   // cout << "diff = " << endl << 
   //  	rbi_added.toMatrix() - rbi_matrix_added << endl;
 
-  CHECK_ARRAY_CLOSE (
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (
       rbi_matrix_added.data(),
       rbi_added.toMatrix().data(),
       36,
       TEST_PREC
-      );
+      ));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialTransformApplySpatialRigidBodyInertiaFull) {
@@ -512,12 +512,12 @@ TEST(SpatialAlgebraTests, TestSpatialTransformApplySpatialRigidBodyInertiaFull) 
   SpatialRigidBodyInertia rbi_transformed = X.apply (rbi);
   SpatialMatrix rbi_matrix_transformed = X.toMatrixAdjoint () * rbi.toMatrix() * X.inverse().toMatrix();
 
-  CHECK_ARRAY_CLOSE (
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (
       rbi_matrix_transformed.data(),
       rbi_transformed.toMatrix().data(),
       36,
       TEST_PREC
-      );
+      ));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialTransformApplyTransposeSpatialRigidBodyInertiaFull) {
@@ -540,12 +540,12 @@ TEST(SpatialAlgebraTests, TestSpatialTransformApplyTransposeSpatialRigidBodyIner
   SpatialRigidBodyInertia rbi_transformed = X.applyTranspose (rbi);
   SpatialMatrix rbi_matrix_transformed = X.toMatrixTranspose() * rbi.toMatrix() * X.toMatrix();
 
-  CHECK_ARRAY_CLOSE (
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (
       rbi_matrix_transformed.data(),
       rbi_transformed.toMatrix().data(),
       36,
       TEST_PREC
-      );
+      ));
 }
 
 TEST(SpatialAlgebraTests, TestSpatialRigidBodyInertiaCreateFromMatrix) {
@@ -564,13 +564,13 @@ TEST(SpatialAlgebraTests, TestSpatialRigidBodyInertiaCreateFromMatrix) {
   rbi.createFromMatrix (spatial_inertia);
 
   EXPECT_EQ (mass, rbi.m);
-  CHECK_ARRAY_EQUAL (Vector3d(mass * com).data(), rbi.h.data(), 3);
+  EXPECT_TRUE(unit_test_utils::checkArraysEq (Vector3d(mass * com).data(), rbi.h.data(), 3));
   Matrix3d rbi_I_matrix (
       rbi.Ixx, rbi.Iyx, rbi.Izx,
       rbi.Iyx, rbi.Iyy, rbi.Izy,
       rbi.Izx, rbi.Izy, rbi.Izz
       );
-  CHECK_ARRAY_EQUAL (inertia.data(), rbi_I_matrix.data(), 9);
+  EXPECT_TRUE(unit_test_utils::checkArraysEq (inertia.data(), rbi_I_matrix.data(), 9));
 }
 
 #ifdef USE_SLOW_SPATIAL_ALGEBRA
@@ -588,6 +588,12 @@ TEST(TestSpatialLinSolve) {
   SpatialVector x = SpatialLinSolve (A, b);
   SpatialVector x_test (3.5, -6.5, 3.5, 1, 1, 1);
 
-  CHECK_ARRAY_CLOSE (x_test.data(), x.data(), 6, TEST_PREC);
+  EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose (x_test.data(), x.data(), 6, TEST_PREC));
 }
 #endif
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
