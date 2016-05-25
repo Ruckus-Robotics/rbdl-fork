@@ -21,7 +21,7 @@ else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS frl)
 find_package(Eigen3 REQUIRED)
 
 LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake )
@@ -45,9 +45,11 @@ include_directories( ${INCLUDES_DIR} ${EIGEN3_INCLUDE_DIR})
 catkin_package(
  INCLUDE_DIRS ${INCLUDES_DIR} ${EIGEN3_INCLUDE_DIR}
  LIBRARIES ${PROJECT_NAME}
-# CATKIN_DEPENDS
+CATKIN_DEPENDS frl
  DEPENDS Eigen3
 )
+
+include_directories( ${INCLUDES_DIR} ${EIGEN3_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
 # Options
 OPTION (RBDL_BUILD_STATIC "Build statically linked library (otherwise dynamiclly linked)" OFF)
