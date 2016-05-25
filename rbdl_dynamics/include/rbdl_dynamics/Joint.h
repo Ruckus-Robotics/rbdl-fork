@@ -692,6 +692,7 @@ namespace RigidBodyDynamics
         unsigned int mDoFCount;
         unsigned int q_index;
         unsigned int custom_joint_index;
+        std::string name;
     };
 
     /** \brief Computes all variables for a joint model

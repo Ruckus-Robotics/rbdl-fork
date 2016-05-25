@@ -20,7 +20,7 @@
 using namespace RigidBodyDynamics;
 using namespace RigidBodyDynamics::Math;
 
-Model::Model()
+Model::Model() : mJointFrames(0), mBodyCenteredFrames(0)
 {
     Body root_body;
     Joint root_joint;

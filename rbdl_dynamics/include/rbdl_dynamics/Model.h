@@ -20,6 +20,8 @@
 #include "rbdl_dynamics/Joint.h"
 #include "rbdl_dynamics/Body.h"
 
+#include "frl/frames/ReferenceFrame.hpp"
+
 // std::vectors containing any objects that have Eigen matrices or vectors
 // as members need to have a special allocater. This can be achieved with
 // the following macro.
@@ -262,6 +264,10 @@ namespace RigidBodyDynamics
          * mBodies[N_B] - N_Bth moveable body <br>
          */
         std::vector<Body> mBodies;
+
+        std::vector<std::shared_ptr<frl::frames::ReferenceFrame>> mJointFrames;
+
+        std::vector<std::shared_ptr<frl::frames::ReferenceFrame>> mBodyCenteredFrames;
 
         /// \brief Human readable names for the bodies
         std::map<std::string, unsigned int> mBodyNameMap;
