@@ -265,12 +265,17 @@ namespace RigidBodyDynamics
          */
         std::vector<Body> mBodies;
 
-        std::vector<std::shared_ptr<frl::frames::ReferenceFrame>> mJointFrames;
+//        std::vector<std::shared_ptr<frl::frames::ReferenceFrame>> mJointFrames;
 
-        std::vector<std::shared_ptr<frl::frames::ReferenceFrame>> mBodyCenteredFrames;
+//        std::vector<std::shared_ptr<frl::frames::ReferenceFrame>> mBodyCenteredFrames;
+
+
 
         /// \brief Human readable names for the bodies
         std::map<std::string, unsigned int> mBodyNameMap;
+
+        //
+        std::map<std::string, unsigned int> mJointNameMovableBodyIdMap;
 
         /** \brief Connects a given body to the model
          *
@@ -307,6 +312,7 @@ namespace RigidBodyDynamics
                 const Math::SpatialTransform &joint_frame,
                 const Joint &joint,
                 const Body &body,
+                const std::string jointName="",
                 std::string body_name = ""
         );
 
@@ -315,6 +321,7 @@ namespace RigidBodyDynamics
                 const Math::SpatialTransform &joint_frame,
                 const Joint &joint,
                 const Body &body,
+                const std::string jointName="",
                 std::string body_name = ""
         );
 
@@ -328,6 +335,7 @@ namespace RigidBodyDynamics
                 const Math::SpatialTransform &joint_frame,
                 const Joint &joint,
                 const Body &body,
+                const std::string jointName="",
                 std::string body_name = ""
         );
 
@@ -336,6 +344,7 @@ namespace RigidBodyDynamics
                 const Math::SpatialTransform &joint_frame,
                 CustomJoint *custom_joint,
                 const Body &body,
+                const std::string jointName="",
                 std::string body_name = ""
         );
 

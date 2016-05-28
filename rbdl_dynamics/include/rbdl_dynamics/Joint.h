@@ -209,22 +209,20 @@ namespace RigidBodyDynamics
      */
     struct RBDL_DLLAPI Joint
     {
-        Joint(const std::string &jointName) :
+        Joint() :
                 mJointAxes(NULL),
                 mJointType(JointTypeUndefined),
                 mDoFCount(0),
-                q_index(0),
-                name(jointName)
+                q_index(0)
         {
         };
 
-        Joint(const std::string &jointName, JointType type) :
+        Joint(JointType type) :
                 mJointAxes(NULL),
                 mJointType(type),
                 mDoFCount(0),
                 custom_joint_index(-1),
-                q_index(0),
-                name(jointName)
+                q_index(0)
         {
             if (type == JointTypeRevoluteX)
             {
@@ -319,13 +317,12 @@ namespace RigidBodyDynamics
             }
         }
 
-        Joint(const std::string &jointName, JointType type, int degreesOfFreedom) :
+        Joint(JointType type, int degreesOfFreedom) :
                 mJointAxes(NULL),
                 mJointType(type),
                 mDoFCount(0),
                 custom_joint_index(-1),
-                q_index(0),
-                name(jointName)
+                q_index(0)
         {
             if (type == JointTypeCustom)
             {
@@ -351,8 +348,7 @@ namespace RigidBodyDynamics
                 mJointType(joint.mJointType),
                 mDoFCount(joint.mDoFCount),
                 q_index(joint.q_index),
-                custom_joint_index(joint.custom_joint_index),
-                name(joint.name)
+                custom_joint_index(joint.custom_joint_index)
         {
             mJointAxes = new Math::SpatialVector[mDoFCount];
 
@@ -406,10 +402,9 @@ namespace RigidBodyDynamics
          * \param joint_type whether the joint is revolute or prismatic
          * \param joint_axis the axis of rotation or translation
          */
-        Joint(  const std::string &jointName,
-                const JointType joint_type,
+        Joint(  const JointType joint_type,
                 const Math::Vector3d &joint_axis
-        ) : name(jointName)
+        )
         {
             mDoFCount = 1;
             mJointAxes = new Math::SpatialVector[mDoFCount];
@@ -455,9 +450,8 @@ namespace RigidBodyDynamics
          *
          * \param axis_0 Motion subspace for axis 0
          */
-        Joint(  const std::string &jointName,
-                const Math::SpatialVector &axis_0
-        ) : name(jointName)
+        Joint(  const Math::SpatialVector &axis_0
+        )
         {
             mDoFCount = 1;
             mJointAxes = new Math::SpatialVector[mDoFCount];
@@ -491,10 +485,9 @@ namespace RigidBodyDynamics
          * \param axis_0 Motion subspace for axis 0
          * \param axis_1 Motion subspace for axis 1
          */
-        Joint(  const std::string &jointName,
-                const Math::SpatialVector &axis_0,
+        Joint(  const Math::SpatialVector &axis_0,
                 const Math::SpatialVector &axis_1
-        ) : name(jointName)
+        )
         {
             mJointType = JointType2DoF;
             mDoFCount = 2;
@@ -518,11 +511,10 @@ namespace RigidBodyDynamics
          * \param axis_1 Motion subspace for axis 1
          * \param axis_2 Motion subspace for axis 2
          */
-        Joint(  const std::string &jointName,
-                const Math::SpatialVector &axis_0,
+        Joint(  const Math::SpatialVector &axis_0,
                 const Math::SpatialVector &axis_1,
                 const Math::SpatialVector &axis_2
-        ) : name(jointName)
+        )
         {
             mJointType = JointType3DoF;
             mDoFCount = 3;
@@ -550,12 +542,11 @@ namespace RigidBodyDynamics
          * \param axis_2 Motion subspace for axis 2
          * \param axis_3 Motion subspace for axis 3
          */
-        Joint(  const std::string &jointName,
-                const Math::SpatialVector &axis_0,
+        Joint(  const Math::SpatialVector &axis_0,
                 const Math::SpatialVector &axis_1,
                 const Math::SpatialVector &axis_2,
                 const Math::SpatialVector &axis_3
-        ) : name(jointName)
+        )
         {
             mJointType = JointType4DoF;
             mDoFCount = 4;
@@ -586,13 +577,12 @@ namespace RigidBodyDynamics
          * \param axis_3 Motion subspace for axis 3
          * \param axis_4 Motion subspace for axis 4
          */
-        Joint(  const std::string &jointName,
-                const Math::SpatialVector &axis_0,
+        Joint(  const Math::SpatialVector &axis_0,
                 const Math::SpatialVector &axis_1,
                 const Math::SpatialVector &axis_2,
                 const Math::SpatialVector &axis_3,
                 const Math::SpatialVector &axis_4
-        ) : name(jointName)
+        )
         {
             mJointType = JointType5DoF;
             mDoFCount = 5;
@@ -626,14 +616,13 @@ namespace RigidBodyDynamics
          * \param axis_4 Motion subspace for axis 4
          * \param axis_5 Motion subspace for axis 5
          */
-        Joint(  const std::string &jointName,
-                const Math::SpatialVector &axis_0,
+        Joint(  const Math::SpatialVector &axis_0,
                 const Math::SpatialVector &axis_1,
                 const Math::SpatialVector &axis_2,
                 const Math::SpatialVector &axis_3,
                 const Math::SpatialVector &axis_4,
                 const Math::SpatialVector &axis_5
-        ) : name(jointName)
+        )
         {
             mJointType = JointType6DoF;
             mDoFCount = 6;
@@ -686,11 +675,6 @@ namespace RigidBodyDynamics
             return axis_rotational || axis_translational;
         }
 
-        std::string getName() const
-        {
-            return name;
-        }
-
         /// \brief The spatial axes of the joint
         Math::SpatialVector *mJointAxes;
         /// \brief Type of joint
@@ -701,7 +685,6 @@ namespace RigidBodyDynamics
         unsigned int mDoFCount;
         unsigned int q_index;
         unsigned int custom_joint_index;
-        std::string name;
     };
 
     /** \brief Computes all variables for a joint model
