@@ -130,33 +130,37 @@ TEST_F(ModelFixture, TestFloatingBodyDimensions)
     Body body;
     Joint float_base_joint(JointTypeFloatingBase);
 
-    model->AppendBody(SpatialTransform(), float_base_joint, body);
+    model->AppendBody(SpatialTransform(), float_base_joint, body,"rootBody");
 
-//    EXPECT_EQ (3u, model->lambda.size());
-//    EXPECT_EQ (3u, model->mu.size());
-//    EXPECT_EQ (6u, model->dof_count);
-//    EXPECT_EQ (7u, model->q_size);
-//    EXPECT_EQ (6u, model->qdot_size);
-//
-//    EXPECT_EQ (3u, model->v.size());
-//    EXPECT_EQ (3u, model->a.size());
-//
-//    EXPECT_EQ (3u, model->mJoints.size());
-//    EXPECT_EQ (3u, model->S.size());
-//
-//    EXPECT_EQ (3u, model->c.size());
-//    EXPECT_EQ (3u, model->IA.size());
-//    EXPECT_EQ (3u, model->pA.size());
-//    EXPECT_EQ (3u, model->U.size());
-//    EXPECT_EQ (3u, model->d.size());
-//    EXPECT_EQ (3u, model->u.size());
-//
-//    SpatialVector spatial_zero;
-//    spatial_zero.setZero();
-//
-//    EXPECT_EQ (3u, model->X_lambda.size());
-//    EXPECT_EQ (3u, model->X_base.size());
-//    EXPECT_EQ (3u, model->mBodies.size());
+    EXPECT_EQ(model->mJointNameMovableBodyIdMap.size(),2u);
+    EXPECT_TRUE(model->GetBodyName(model->mJointNameMovableBodyIdMap["floatingRootJointXYZ"])=="");
+    EXPECT_TRUE(model->GetBodyName(model->mJointNameMovableBodyIdMap["floatingRootJointRPY"])=="rootBody");
+
+    EXPECT_EQ (3u, model->lambda.size());
+    EXPECT_EQ (3u, model->mu.size());
+    EXPECT_EQ (6u, model->dof_count);
+    EXPECT_EQ (7u, model->q_size);
+    EXPECT_EQ (6u, model->qdot_size);
+
+    EXPECT_EQ (3u, model->v.size());
+    EXPECT_EQ (3u, model->a.size());
+
+    EXPECT_EQ (3u, model->mJoints.size());
+    EXPECT_EQ (3u, model->S.size());
+
+    EXPECT_EQ (3u, model->c.size());
+    EXPECT_EQ (3u, model->IA.size());
+    EXPECT_EQ (3u, model->pA.size());
+    EXPECT_EQ (3u, model->U.size());
+    EXPECT_EQ (3u, model->d.size());
+    EXPECT_EQ (3u, model->u.size());
+
+    SpatialVector spatial_zero;
+    spatial_zero.setZero();
+
+    EXPECT_EQ (3u, model->X_lambda.size());
+    EXPECT_EQ (3u, model->X_base.size());
+    EXPECT_EQ (3u, model->mBodies.size());
 }
 
 /** \brief Tests whether the joint and body information stored in the Model are computed correctly 
