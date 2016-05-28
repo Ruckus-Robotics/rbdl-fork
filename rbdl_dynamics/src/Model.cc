@@ -209,17 +209,23 @@ unsigned int AddBodyMultiDofJoint(
 
     if (joint.mJointType == JointTypeFloatingBase)
     {
+        if(jointName.size()!=0)
+        {
+            std::string msg = "Error: You have specified a name for the floating base joint. The names for the translational and rotational joints are fixed to be floatingRootJointXYZ and floatingRootJointRPY.";
+            throw std::runtime_error(msg);
+        }
+
         null_parent = model.AddBody(parent_id,
                                     joint_frame,
                                     JointTypeTranslationXYZ,
-                                    null_body);
+                                    null_body,"","floatingRootJointXYZ");
 
         return model.AddBody(null_parent,
                              SpatialTransform(),
                              JointTypeSpherical,
                              body,
                              body_name,
-                             "floatingRootJoint");
+                             "floatingRootJointRPY");
     }
 
     Joint single_dof_joint;
@@ -389,12 +395,8 @@ unsigned int Model::AddBody(
     {
         if (mBodyNameMap.find(body_name) != mBodyNameMap.end())
         {
-            std::cerr << "Error: Body with name '"
-            << body_name
-            << "' already exists!"
-            << std::endl;
-            assert (0);
-            abort();
+            std::string msg = "Error: Body with name '" + body_name + "' already exists!";
+            throw std::runtime_error(msg);
         }
         mBodyNameMap[body_name] = mBodies.size() - 1;
     }
@@ -403,15 +405,11 @@ unsigned int Model::AddBody(
     {
         if (mJointNameMovableBodyIdMap.find(jointName) != mJointNameMovableBodyIdMap.end())
         {
-            std::cerr << "Error: Joint with name '" << jointName << "' elready exists!" << std::endl;
-            assert(0);
-            abort();
+            std::string msg = "Error: Joint with name '" + jointName + "' elready exists!";
+            throw std::runtime_error(msg);
         }
 
-        if (body_name.size() != 0)
-        {
-            mJointNameMovableBodyIdMap[jointName] = mBodies.size() - 1;
-        }
+        mJointNameMovableBodyIdMap[jointName] = mBodies.size() - 1;
     }
 
     // state information
