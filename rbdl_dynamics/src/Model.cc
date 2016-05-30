@@ -218,7 +218,7 @@ unsigned int AddBodyMultiDofJoint(
         null_parent = model.AddBody(parent_id,
                                     joint_frame,
                                     JointTypeTranslationXYZ,
-                                    null_body,"","floatingRootJointXYZ");
+                                    null_body);
 
         return model.AddBody(null_parent,
                              SpatialTransform(),
@@ -399,17 +399,17 @@ unsigned int Model::AddBody(
             throw std::runtime_error(msg);
         }
         mBodyNameMap[body_name] = mBodies.size() - 1;
-    }
 
-    if (jointName.size() != 0)
-    {
-        if (mJointNameMovableBodyIdMap.find(jointName) != mJointNameMovableBodyIdMap.end())
+        if (jointName.size() != 0)
         {
-            std::string msg = "Error: Joint with name '" + jointName + "' elready exists!";
-            throw std::runtime_error(msg);
-        }
+            if (mJointNameMovableBodyIdMap.find(jointName) != mJointNameMovableBodyIdMap.end())
+            {
+                std::string msg = "Error: Joint with name '" + jointName + "' elready exists!";
+                throw std::runtime_error(msg);
+            }
 
-        mJointNameMovableBodyIdMap[jointName] = mBodies.size() - 1;
+            mJointNameMovableBodyIdMap[jointName] = mBodies.size() - 1;
+        }
     }
 
     // state information

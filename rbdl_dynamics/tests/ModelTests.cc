@@ -76,7 +76,8 @@ TEST_F(ModelFixture, TestAddBodyDimensions)
     Joint joint(SpatialVector(0., 0., 1., 0., 0., 0.));
 
     unsigned int body_id = 0;
-    body_id = model->AddBody(0, Xtrans(Vector3d(0., 0., 0.)), joint, body,"","joint1");
+    // Adding null body.
+    body_id = model->AddBody(0, Xtrans(Vector3d(0., 0., 0.)), joint, body);
 
     EXPECT_EQ (1u, body_id);
     EXPECT_EQ (2u, model->lambda.size());
@@ -87,8 +88,7 @@ TEST_F(ModelFixture, TestAddBodyDimensions)
     EXPECT_EQ (2u, model->a.size());
 
     EXPECT_EQ (2u, model->mJoints.size());
-    EXPECT_EQ(1u, model->mJointNameMovableBodyIdMap.size());
-    EXPECT_EQ(1u, model->mJointNameMovableBodyIdMap["joint1"]);
+    EXPECT_EQ(0u, model->mJointNameMovableBodyIdMap.size());
     EXPECT_EQ (2u, model->S.size());
 
     EXPECT_EQ (2u, model->c.size());
@@ -132,8 +132,8 @@ TEST_F(ModelFixture, TestFloatingBodyDimensions)
 
     model->AppendBody(SpatialTransform(), float_base_joint, body,"rootBody");
 
-    EXPECT_EQ(model->mJointNameMovableBodyIdMap.size(),2u);
-    EXPECT_TRUE(model->GetBodyName(model->mJointNameMovableBodyIdMap["floatingRootJointXYZ"])=="");
+    EXPECT_EQ(model->mJointNameMovableBodyIdMap.size(),1u);
+    EXPECT_TRUE(model->mJointNameMovableBodyIdMap.find("floatingRootJointXYZ")==model->mJointNameMovableBodyIdMap.end());
     EXPECT_TRUE(model->GetBodyName(model->mJointNameMovableBodyIdMap["floatingRootJointRPY"])=="rootBody");
 
     EXPECT_EQ (3u, model->lambda.size());
@@ -298,7 +298,7 @@ TEST_F (ModelFixture,Model2DoFJoint)
     model_std.gravity = Vector3d(0., -9.81, 0.);
 
     model_std.AddBody(0, Xtrans(Vector3d(1., 0., 0.)), joint_rot_z, null_body);
-    model_std.AppendBody(Xtrans(Vector3d(0., 0., 0.)), joint_rot_x, body);
+    model_std.AppendBody(Xtrans(Vector3d(0., 0., 0.)), joint_rot_x, body,"body1","joint1");
 
     // using a model with a 2 DoF joint
     Joint joint_rot_zx(
@@ -309,7 +309,7 @@ TEST_F (ModelFixture,Model2DoFJoint)
     Model model_2;
     model_2.gravity = Vector3d(0., -9.81, 0.);
 
-    model_2.AddBody(0, Xtrans(Vector3d(1., 0., 0.)), joint_rot_zx, body);
+    model_2.AddBody(0, Xtrans(Vector3d(1., 0., 0.)), joint_rot_zx, body,"body1","joint1");
 
     VectorNd Q = VectorNd::Zero(model_std.dof_count);
     VectorNd QDot = VectorNd::Zero(model_std.dof_count);
@@ -320,6 +320,12 @@ TEST_F (ModelFixture,Model2DoFJoint)
 
     ForwardDynamics(model_std, Q, QDot, Tau, QDDot_std);
     ForwardDynamics(model_2, Q, QDot, Tau, QDDot_2);
+
+    EXPECT_EQ(model_std.mJointNameMovableBodyIdMap.size(),1u);
+    EXPECT_EQ(model_2.mJointNameMovableBodyIdMap.size(),1u);
+    EXPECT_EQ(model_std.mJointNameMovableBodyIdMap.size(),model_2.mJointNameMovableBodyIdMap.size());
+    EXPECT_EQ(model_std.mJointNameMovableBodyIdMap["joint1"],2u);
+    EXPECT_EQ(model_2.mJointNameMovableBodyIdMap["joint1"],2u);
 
     EXPECT_TRUE(unit_test_utils::checkArraysEpsilonClose(QDDot_std.data(), QDDot_2.data(), model_std.dof_count, TEST_PREC));
 }
@@ -343,11 +349,11 @@ TEST_F (ModelFixture,Model3DoFJoint)
     // correct.
     model_std.AddBody(0, Xtrans(Vector3d(1., 0., 0.)), joint_rot_z, null_body);
     model_std.AppendBody(Xtrans(Vector3d(0., 0., 0.)), joint_rot_y, null_body);
-    body_id = model_std.AppendBody(Xtrans(Vector3d(0., 0., 0.)), joint_rot_x, body);
+    body_id = model_std.AppendBody(Xtrans(Vector3d(0., 0., 0.)), joint_rot_x, body,"body1","3DofJoint1");
 
     model_std.AddBody(body_id, Xtrans(Vector3d(1., 0., 0.)), joint_rot_z, null_body);
     model_std.AppendBody(Xtrans(Vector3d(0., 0., 0.)), joint_rot_y, null_body);
-    body_id = model_std.AppendBody(Xtrans(Vector3d(0., 0., 0.)), joint_rot_x, body);
+    body_id = model_std.AppendBody(Xtrans(Vector3d(0., 0., 0.)), joint_rot_x, body,"body2","3DofJoint2");
 
     // using a model with a 2 DoF joint
     Joint joint_rot_zyx(
