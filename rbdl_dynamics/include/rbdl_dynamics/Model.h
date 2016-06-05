@@ -20,8 +20,6 @@
 #include "rbdl_dynamics/Joint.h"
 #include "rbdl_dynamics/Body.h"
 
-#include "frl/frames/ReferenceFrame.hpp"
-
 // std::vectors containing any objects that have Eigen matrices or vectors
 // as members need to have a special allocater. This can be achieved with
 // the following macro.

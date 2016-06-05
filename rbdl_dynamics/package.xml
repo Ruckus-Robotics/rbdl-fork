@@ -13,7 +13,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>eigen</depend>
-  <depend>frl</depend>
   <test_depend>gtest</test_depend>
 
   <!-- The export tag contains other, unspecified, tags -->

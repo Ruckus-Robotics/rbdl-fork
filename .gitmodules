@@ -1,4 +1,0 @@
-[submodule "frl"]
-	path = frl
-	url = https://github.com/Ruckus-Robotics/frl.git
-	branch = develop

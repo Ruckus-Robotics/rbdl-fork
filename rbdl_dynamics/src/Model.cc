@@ -404,7 +404,7 @@ unsigned int Model::AddBody(
         {
             if (mJointNameMovableBodyIdMap.find(jointName) != mJointNameMovableBodyIdMap.end())
             {
-                std::string msg = "Error: Joint with name '" + jointName + "' elready exists!";
+                std::string msg = "Error: Joint with name '" + jointName + "' already exists!";
                 throw std::runtime_error(msg);
             }
 
