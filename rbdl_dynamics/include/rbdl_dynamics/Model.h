@@ -272,8 +272,10 @@ namespace RigidBodyDynamics
         /// \brief Human readable names for the bodies
         std::map<std::string, unsigned int> mBodyNameMap;
 
-        //
+        // Map consisting of joint names mapping to the id of the body the joint moves.
         std::map<std::string, unsigned int> mJointNameMovableBodyIdMap;
+        // Map that maps joint name to the name of the body the joint moves.
+        std::map<std::string, std::string> mJointNameBodyNameMap;
 
         /** \brief Connects a given body to the model
          *

@@ -650,6 +650,11 @@ TEST_F (Human36, SpatialJacobianSimple
     unsigned int foot_r_id = model->GetBodyId("foot_r");
     MatrixNd G(MatrixNd::Zero(6, model->dof_count));
 
+    for(auto const keyValuePair : model->mJointNameMovableBodyIdMap)
+    {
+        EXPECT_EQ(keyValuePair.second,model->mBodyNameMap[model->mJointNameBodyNameMap[keyValuePair.first]]);
+    }
+
     CalcBodySpatialJacobian(*model, q, foot_r_id, G
     );
 

@@ -409,6 +409,7 @@ unsigned int Model::AddBody(
             }
 
             mJointNameMovableBodyIdMap[jointName] = mBodies.size() - 1;
+            mJointNameBodyNameMap[jointName] = body_name;
         }
     }
 
