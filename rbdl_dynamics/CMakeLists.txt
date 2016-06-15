@@ -38,6 +38,7 @@ SET ( RBDL_SOURCES
 	src/Joint.cc
 	src/Model.cc
 	src/Kinematics.cc
+    src/ReferenceFrame.cpp
 	)
 
 include_directories( ${INCLUDES_DIR} ${EIGEN3_INCLUDE_DIR})

@@ -7,7 +7,7 @@
 **/
 
 #include <memory>
-#include "rbdl_dynamics/SpatialAlgebraOperators.h"
+#include "rbdl_dynamics/rbdl_math.h"
 #include <string>
 #include <vector>
 #include <climits>
@@ -16,7 +16,7 @@ namespace frl
 {
 	namespace frames
 	{
-		class ReferenceFrame
+		class RBDL_DLLAPI ReferenceFrame
 		{
 		public:
 			ReferenceFrame(const ReferenceFrame &referenceFrameToCopy)
@@ -30,11 +30,16 @@ namespace frl
 				isBodyCenteredFrame = referenceFrameToCopy.isBodyCenteredFrame;
 			}
 
+            /**
+             * @constructor
+             *
+             *
+             */
 			ReferenceFrame(const std::string &frameName, ReferenceFrame *parentFrame, bool isWorldFrame, bool isBodyCenteredFrame)
 			{
-				this->transformToParent.setIdentity();
-				this->transformToRoot.setIdentity();
-				this->inverseTransformToRoot.setIdentity();
+                // transformToRoot = identity
+                // inverseTransformToRoot = identity
+                // transformToParent = identity
 
 				this->frameName = frameName;
 				this->parentFrame = parentFrame;
@@ -43,13 +48,13 @@ namespace frl
 				this->framesStartingWithRootEndingWithThis = constructVectorOfFramesStartingWithRootEndingWithThis(this);
 			}
 
-			ReferenceFrame(const std::string &frameName, ReferenceFrame* parentFrame, const geometry::RigidBodyTransform<double> &transformToParent, bool isWorldFrame, bool isBodyCenteredFrame)
+			ReferenceFrame(const std::string &frameName, ReferenceFrame* parentFrame, const RigidBodyDynamics::Math::SpatialTransform &transformToParent, bool isWorldFrame, bool isBodyCenteredFrame)
 			{
+                // transformToRoot = identity
+                // inverseTransformToRoot = identity
 				this->frameName = frameName;
 				this->parentFrame = parentFrame;
 				this->transformToParent = transformToParent;
-				this->transformToRoot.setIdentity();
-				this->inverseTransformToRoot.setIdentity();
 				this->isWorldFrame = isWorldFrame;
 				this->isBodyCenteredFrame = isBodyCenteredFrame;
 				this->framesStartingWithRootEndingWithThis = constructVectorOfFramesStartingWithRootEndingWithThis(this);
@@ -57,28 +62,30 @@ namespace frl
 
 			ReferenceFrame(const std::string &frameName, bool isWorldFrame, bool isBodyCenteredFrame)
 			{
+                // transformToRoot = identity
+                // inverseTransformToRoot = identity
+                // transformToParent = identity
+
 				this->frameName = frameName;
 				this->isWorldFrame = isWorldFrame;
 				this->isBodyCenteredFrame = isBodyCenteredFrame;
 				this->parentFrame = nullptr;
-				this->transformToRoot.setIdentity();
-				this->inverseTransformToRoot.setIdentity();
 				this->transformToRootID = 0;
 
-				this->transformToParent.setIdentity();
 				std::vector<ReferenceFrame *> vector;
 				vector.push_back(this);
 				this->framesStartingWithRootEndingWithThis = vector;
 			}
 
-			ReferenceFrame(const std::string &frameName, ReferenceFrame *parentFrame, const geometry::RigidBodyTransform<double> &transfomToParent, bool isBodyCenteredFrame)
+			ReferenceFrame(const std::string &frameName, ReferenceFrame *parentFrame, const RigidBodyDynamics::Math::SpatialTransform &transfomToParent, bool isBodyCenteredFrame)
 			{
+                // transformToRoot = identity
+                // inverseTransformToRoot = identity
+
 				this->frameName = frameName;
 				this->parentFrame = parentFrame;
 				this->transformToParent = transformToParent;
 				this->isBodyCenteredFrame = isBodyCenteredFrame;
-				this->transformToRoot.setIdentity();
-				this->inverseTransformToRoot.setIdentity();
 				this->isWorldFrame = false;
 				this->framesStartingWithRootEndingWithThis = constructVectorOfFramesStartingWithRootEndingWithThis(this);
 			}
@@ -100,26 +107,24 @@ namespace frl
 				this->transformToRootID = LLONG_MIN;
 			}
 
-            template<typename T=double>
-			void getTransformToDesiredFrame(geometry::RigidBodyTransform<T> &transformToPack, ReferenceFrame *desiredFrame)
+			void getTransformToDesiredFrame(RigidBodyDynamics::Math::SpatialTransform &transformToPack, ReferenceFrame *desiredFrame)
 			{
 				verifyFramesHaveSameRoot(desiredFrame);
 
 				this->computeTransform();
 				desiredFrame->computeTransform();
 
-				geometry::RigidBodyTransform<T> tmpTransform = desiredFrame->inverseTransformToRoot;
-				geometry::RigidBodyTransform<T> tmpTransform2 = this->transformToRoot;
+				RigidBodyDynamics::Math::SpatialTransform tmpTransform = desiredFrame->inverseTransformToRoot;
+				RigidBodyDynamics::Math::SpatialTransform tmpTransform2 = this->transformToRoot;
 
 				tmpTransform *= tmpTransform2;
 
 				transformToPack = tmpTransform;
 			}
 
-            template<typename T=double>
-			geometry::RigidBodyTransform<T> getTransformToDesiredFrame(ReferenceFrame *desiredFrame)
+			RigidBodyDynamics::Math::SpatialTransform getTransformToDesiredFrame(ReferenceFrame *desiredFrame)
 			{
-				geometry::RigidBodyTransform<T> transform;
+				RigidBodyDynamics::Math::SpatialTransform transform;
 				getTransformToDesiredFrame(transform, desiredFrame);
 				return transform;
 			}
@@ -132,7 +137,7 @@ namespace frl
 				}
 			}
 
-			void setTransformToParent(const geometry::RigidBodyTransform<double> &transformToParent)
+			void setTransformToParent(const RigidBodyDynamics::Math::SpatialTransform &transformToParent)
 			{
 				this->transformToParent = transformToParent;
 			}
@@ -163,16 +168,14 @@ namespace frl
 				}
 			}
 
-            template<typename T=double>
-			geometry::RigidBodyTransform<T> getTransformToRoot()
+			RigidBodyDynamics::Math::SpatialTransform getTransformToRoot()
 			{
 				computeTransform();
 
                 return this->transformToRoot;
 			}
 
-            template<typename T=double>
-			geometry::RigidBodyTransform<T> getInverseTransformToRoot()
+			RigidBodyDynamics::Math::SpatialTransform getInverseTransformToRoot()
 			{
                 return this->inverseTransformToRoot;
 			}
@@ -214,10 +217,10 @@ namespace frl
 				return worldFrame.get();
 			}
 
-			virtual void updateTransformToParent(geometry::RigidBodyTransform<double> &transformToParent)
+			virtual void updateTransformToParent(RigidBodyDynamics::Math::SpatialTransform &transformToParent)
 			{ };
 
-			inline geometry::RigidBodyTransform<double> getTransformToParent()
+			inline RigidBodyDynamics::Math::SpatialTransform getTransformToParent()
 			{
 				return this->transformToParent;
 			}
@@ -276,13 +279,13 @@ namespace frl
 					{
 						if (frame->getParentFrame() != nullptr)
 						{
-							geometry::RigidBodyTransform<double> parentsTransformToRoot = frame->getParentFrame()->transformToRoot;
+							RigidBodyDynamics::Math::SpatialTransform parentsTransformToRoot = frame->getParentFrame()->transformToRoot;
 
 							frame->transformToRoot = parentsTransformToRoot;
 
 							frame->transformToRoot *= frame->transformToParent;
 
-							geometry::RigidBodyTransform<double> transformToRoot = frame->transformToRoot;
+							RigidBodyDynamics::Math::SpatialTransform transformToRoot = frame->transformToRoot;
 							frame->inverseTransformToRoot = transformToRoot;
 							frame->inverseTransformToRoot.invert();
 
@@ -300,9 +303,10 @@ namespace frl
 			std::string frameName;
 			ReferenceFrame *parentFrame;
 			static std::unique_ptr<ReferenceFrame> worldFrame;
-			geometry::RigidBodyTransform<double> transformToParent;
-			geometry::RigidBodyTransform<double> transformToRoot;
-			geometry::RigidBodyTransform<double> inverseTransformToRoot;
+			RigidBodyDynamics::Math::SpatialTransform transformToParent;
+			RigidBodyDynamics::Math::SpatialTransform transformToRoot;
+			RigidBodyDynamics::Math::SpatialTransform inverseTransformToRoot;
+
 			bool isWorldFrame;
 			bool isBodyCenteredFrame;
 		};

@@ -360,6 +360,12 @@ namespace RigidBodyDynamics
                 );
             }
 
+            void invert() const
+            {
+                E=E.transpose();
+                r=-E*r;
+            }
+
             SpatialTransform operator*(const SpatialTransform &XT) const
             {
                 return SpatialTransform(E * XT.E, XT.r + XT.E.transpose() * r);
