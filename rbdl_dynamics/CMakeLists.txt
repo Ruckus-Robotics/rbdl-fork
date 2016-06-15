@@ -26,7 +26,7 @@ find_package(Eigen3 REQUIRED)
 
 LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake )
 
-SET(INCLUDES_DIR ${PROJECT_SOURCE_DIR}/include)
+SET(INCLUDES_DIR ${PROJECT_SOURCE_DIR}/include )
 # Source files for RBDL
 SET ( RBDL_SOURCES 
 	src/rbdl_version.cc
