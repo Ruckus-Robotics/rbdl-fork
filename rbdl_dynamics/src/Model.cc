@@ -20,7 +20,7 @@
 using namespace RigidBodyDynamics;
 using namespace RigidBodyDynamics::Math;
 
-Model::Model() : mJointFrames(0), mBodyCenteredFrames(0)
+Model::Model()
 {
     Body root_body;
     Joint root_joint;
@@ -92,7 +92,8 @@ unsigned int AddBodyFixedJoint(
         const SpatialTransform &joint_frame,
         const Joint &joint,
         const Body &body,
-        std::string body_name)
+        std::string body_name,
+        const std::string jointName)
 {
     FixedBody fbody = FixedBody::CreateFromBody(body);
     fbody.mMovableParent = parent_id;
@@ -156,7 +157,8 @@ unsigned int AddBodyMultiDofJoint(
         const SpatialTransform &joint_frame,
         const Joint &joint,
         const Body &body,
-        std::string body_name)
+        std::string body_name,
+        const std::string jointName)
 {
     // Here we emulate multi DoF joints by simply adding nullbodies. This
     // allows us to use fixed size elements for S,v,a, etc. which is very
@@ -207,6 +209,12 @@ unsigned int AddBodyMultiDofJoint(
 
     if (joint.mJointType == JointTypeFloatingBase)
     {
+        if(jointName.size()!=0)
+        {
+            std::string msg = "Error: You have specified a name for the floating base joint. The names for the translational and rotational joints are fixed to be floatingRootJointXYZ and floatingRootJointRPY.";
+            throw std::runtime_error(msg);
+        }
+
         null_parent = model.AddBody(parent_id,
                                     joint_frame,
                                     JointTypeTranslationXYZ,
@@ -216,7 +224,8 @@ unsigned int AddBodyMultiDofJoint(
                              SpatialTransform(),
                              JointTypeSpherical,
                              body,
-                             body_name);
+                             body_name,
+                             "floatingRootJointRPY");
     }
 
     Joint single_dof_joint;
@@ -288,7 +297,8 @@ unsigned int AddBodyMultiDofJoint(
                          joint_frame_transform,
                          single_dof_joint,
                          body,
-                         body_name);
+                         body_name,
+                         jointName);
 }
 
 unsigned int Model::AddBody(
@@ -296,7 +306,8 @@ unsigned int Model::AddBody(
         const SpatialTransform &joint_frame,
         const Joint &joint,
         const Body &body,
-        std::string body_name)
+        std::string body_name,
+        const std::string jointName)
 {
     assert (lambda.size() > 0);
     assert (joint.mJointType != JointTypeUndefined);
@@ -308,7 +319,8 @@ unsigned int Model::AddBody(
                                                      joint_frame,
                                                      joint,
                                                      body,
-                                                     body_name);
+                                                     body_name,
+                                                     jointName);
 
         return previously_added_body_id;
     }
@@ -334,7 +346,8 @@ unsigned int Model::AddBody(
                                                         joint_frame,
                                                         joint,
                                                         body,
-                                                        body_name);
+                                                        body_name,
+                                                        jointName);
         return previously_added_body_id;
     }
 
@@ -382,14 +395,22 @@ unsigned int Model::AddBody(
     {
         if (mBodyNameMap.find(body_name) != mBodyNameMap.end())
         {
-            std::cerr << "Error: Body with name '"
-            << body_name
-            << "' already exists!"
-            << std::endl;
-            assert (0);
-            abort();
+            std::string msg = "Error: Body with name '" + body_name + "' already exists!";
+            throw std::runtime_error(msg);
         }
         mBodyNameMap[body_name] = mBodies.size() - 1;
+
+        if (jointName.size() != 0)
+        {
+            if (mJointNameMovableBodyIdMap.find(jointName) != mJointNameMovableBodyIdMap.end())
+            {
+                std::string msg = "Error: Joint with name '" + jointName + "' already exists!";
+                throw std::runtime_error(msg);
+            }
+
+            mJointNameMovableBodyIdMap[jointName] = mBodies.size() - 1;
+            mJointNameBodyNameMap[jointName] = body_name;
+        }
     }
 
     // state information
@@ -528,13 +549,15 @@ unsigned int Model::AppendBody(
         const Math::SpatialTransform &joint_frame,
         const Joint &joint,
         const Body &body,
-        std::string body_name)
+        std::string body_name,
+        const std::string jointName)
 {
     return Model::AddBody(previously_added_body_id,
                           joint_frame,
                           joint,
                           body,
-                          body_name);
+                          body_name,
+                          jointName);
 }
 
 unsigned int Model::AddBodyCustomJoint(
@@ -542,7 +565,8 @@ unsigned int Model::AddBodyCustomJoint(
         const Math::SpatialTransform &joint_frame,
         CustomJoint *custom_joint,
         const Body &body,
-        std::string body_name)
+        std::string body_name,
+        const std::string jointName)
 {
     Joint proxy_joint(JointTypeCustom, custom_joint->mDoFCount);
     proxy_joint.custom_joint_index = mCustomJoints.size();
@@ -555,7 +579,8 @@ unsigned int Model::AddBodyCustomJoint(
                                    joint_frame,
                                    proxy_joint,
                                    body,
-                                   body_name);
+                                   body_name,
+                                   jointName);
 
     return body_id;
 }

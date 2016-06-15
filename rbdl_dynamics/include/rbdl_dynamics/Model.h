@@ -20,8 +20,6 @@
 #include "rbdl_dynamics/Joint.h"
 #include "rbdl_dynamics/Body.h"
 
-#include "frl/frames/ReferenceFrame.hpp"
-
 // std::vectors containing any objects that have Eigen matrices or vectors
 // as members need to have a special allocater. This can be achieved with
 // the following macro.
@@ -265,12 +263,19 @@ namespace RigidBodyDynamics
          */
         std::vector<Body> mBodies;
 
-        std::vector<std::shared_ptr<frl::frames::ReferenceFrame>> mJointFrames;
+//        std::vector<std::shared_ptr<frl::frames::ReferenceFrame>> mJointFrames;
 
-        std::vector<std::shared_ptr<frl::frames::ReferenceFrame>> mBodyCenteredFrames;
+//        std::vector<std::shared_ptr<frl::frames::ReferenceFrame>> mBodyCenteredFrames;
+
+
 
         /// \brief Human readable names for the bodies
         std::map<std::string, unsigned int> mBodyNameMap;
+
+        // Map consisting of joint names mapping to the id of the body the joint moves.
+        std::map<std::string, unsigned int> mJointNameMovableBodyIdMap;
+        // Map that maps joint name to the name of the body the joint moves.
+        std::map<std::string, std::string> mJointNameBodyNameMap;
 
         /** \brief Connects a given body to the model
          *
@@ -307,6 +312,7 @@ namespace RigidBodyDynamics
                 const Math::SpatialTransform &joint_frame,
                 const Joint &joint,
                 const Body &body,
+                const std::string jointName="",
                 std::string body_name = ""
         );
 
@@ -315,6 +321,7 @@ namespace RigidBodyDynamics
                 const Math::SpatialTransform &joint_frame,
                 const Joint &joint,
                 const Body &body,
+                const std::string jointName="",
                 std::string body_name = ""
         );
 
@@ -328,6 +335,7 @@ namespace RigidBodyDynamics
                 const Math::SpatialTransform &joint_frame,
                 const Joint &joint,
                 const Body &body,
+                const std::string jointName="",
                 std::string body_name = ""
         );
 
@@ -336,6 +344,7 @@ namespace RigidBodyDynamics
                 const Math::SpatialTransform &joint_frame,
                 CustomJoint *custom_joint,
                 const Body &body,
+                const std::string jointName="",
                 std::string body_name = ""
         );
 

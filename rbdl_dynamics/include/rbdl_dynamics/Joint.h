@@ -402,8 +402,7 @@ namespace RigidBodyDynamics
          * \param joint_type whether the joint is revolute or prismatic
          * \param joint_axis the axis of rotation or translation
          */
-        Joint(
-                const JointType joint_type,
+        Joint(  const JointType joint_type,
                 const Math::Vector3d &joint_axis
         )
         {
@@ -451,8 +450,7 @@ namespace RigidBodyDynamics
          *
          * \param axis_0 Motion subspace for axis 0
          */
-        Joint(
-                const Math::SpatialVector &axis_0
+        Joint(  const Math::SpatialVector &axis_0
         )
         {
             mDoFCount = 1;
@@ -487,8 +485,7 @@ namespace RigidBodyDynamics
          * \param axis_0 Motion subspace for axis 0
          * \param axis_1 Motion subspace for axis 1
          */
-        Joint(
-                const Math::SpatialVector &axis_0,
+        Joint(  const Math::SpatialVector &axis_0,
                 const Math::SpatialVector &axis_1
         )
         {
@@ -514,8 +511,7 @@ namespace RigidBodyDynamics
          * \param axis_1 Motion subspace for axis 1
          * \param axis_2 Motion subspace for axis 2
          */
-        Joint(
-                const Math::SpatialVector &axis_0,
+        Joint(  const Math::SpatialVector &axis_0,
                 const Math::SpatialVector &axis_1,
                 const Math::SpatialVector &axis_2
         )
@@ -546,8 +542,7 @@ namespace RigidBodyDynamics
          * \param axis_2 Motion subspace for axis 2
          * \param axis_3 Motion subspace for axis 3
          */
-        Joint(
-                const Math::SpatialVector &axis_0,
+        Joint(  const Math::SpatialVector &axis_0,
                 const Math::SpatialVector &axis_1,
                 const Math::SpatialVector &axis_2,
                 const Math::SpatialVector &axis_3
@@ -582,8 +577,7 @@ namespace RigidBodyDynamics
          * \param axis_3 Motion subspace for axis 3
          * \param axis_4 Motion subspace for axis 4
          */
-        Joint(
-                const Math::SpatialVector &axis_0,
+        Joint(  const Math::SpatialVector &axis_0,
                 const Math::SpatialVector &axis_1,
                 const Math::SpatialVector &axis_2,
                 const Math::SpatialVector &axis_3,
@@ -622,8 +616,7 @@ namespace RigidBodyDynamics
          * \param axis_4 Motion subspace for axis 4
          * \param axis_5 Motion subspace for axis 5
          */
-        Joint(
-                const Math::SpatialVector &axis_0,
+        Joint(  const Math::SpatialVector &axis_0,
                 const Math::SpatialVector &axis_1,
                 const Math::SpatialVector &axis_2,
                 const Math::SpatialVector &axis_3,
@@ -692,7 +685,6 @@ namespace RigidBodyDynamics
         unsigned int mDoFCount;
         unsigned int q_index;
         unsigned int custom_joint_index;
-        std::string name;
     };
 
     /** \brief Computes all variables for a joint model
